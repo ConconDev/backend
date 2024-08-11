@@ -1,5 +1,5 @@
 package com.sookmyung.concon.User.Entity;
 
-public enum Sex {
+public enum Gender {
     FEMALE, MALE
 }

@@ -12,7 +12,7 @@ public class User {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Sex sex;
+    private Gender sex;
     private int age;
 
     // 프로필 사진
