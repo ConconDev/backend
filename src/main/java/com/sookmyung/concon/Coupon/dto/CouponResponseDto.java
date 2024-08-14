@@ -1,46 +1,21 @@
-package com.sookmyung.concon.Coupon.Entity;
+package com.sookmyung.concon.Coupon.dto;
 
-import com.sookmyung.concon.Item.Entity.Item;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "coupon")
-public class Coupon {
+public class CouponResponseDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long userId;
-
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
-
+    private Long itemId;
     private String barcode;
-
     private String barcodeImagePath;
-
     private String imagePath;
-
     private String name;
-
     private Double price;
-
     private LocalDate expirationDate;
-
     private LocalDate usedDate;
-
-
-    private Boolean usedFlag;  // 사용 완료 여부
-    private Boolean buyFlag;   // 구매 여부
+    private Boolean usedFlag;
+    private Boolean buyFlag;
 
     public Long getId() {
         return id;
@@ -58,12 +33,12 @@ public class Coupon {
         this.userId = userId;
     }
 
-    public Item getItem() {
-        return item;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public String getBarcode() {

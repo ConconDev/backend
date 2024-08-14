@@ -27,6 +27,4 @@ public class ItemService {
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }
-
-    // 필요하다면 추가적인 비즈니스 로직 작성
 }

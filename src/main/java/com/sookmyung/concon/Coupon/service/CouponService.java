@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class CouponService {
@@ -43,13 +44,30 @@ public class CouponService {
         LocalDate expirationDate = LocalDate.parse(expirationDateStr, formatter);
         coupon.setExpirationDate(expirationDate);
 
+        // 기본 값 설정
+        coupon.setUsedFlag(false);
+        coupon.setBuyFlag(false);
+
+        return couponRepository.save(coupon);
+    }
+
+    public List<Coupon> getCouponsByUserId(Long userId) {
+        return couponRepository.findByUserId(userId);
+    }
+
+    public List<Coupon> getCouponsByUserIdAndUsedFlag(Long userId, Boolean usedFlag) {
+        return couponRepository.findByUserIdAndUsedFlag(userId, usedFlag);
+    }
+
+    // 예시로 플래그 값을 업데이트하는 메서드
+    public Coupon updateCouponStatus(Long couponId, Boolean usedFlag, Boolean buyFlag) {
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("Invalid coupon ID"));
+        coupon.setUsedFlag(usedFlag);
+        coupon.setBuyFlag(buyFlag);
         return couponRepository.save(coupon);
     }
 
     private String saveFile(MultipartFile file) {
-        // 파일을 서버나 클라우드 스토리지에 저장하는 로직을 구현
-        // 예를 들어, file.transferTo(new File("경로"));
-        // 여기에 파일을 저장한 후 해당 경로를 반환
         return "file_path";
     }
 }
