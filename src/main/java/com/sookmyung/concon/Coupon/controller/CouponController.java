@@ -45,6 +45,12 @@ public class CouponController {
         return coupons.stream().map(this::convertToResponseDto).collect(Collectors.toList());
     }
 
+    // 쿠폰 삭제 API
+    @DeleteMapping("/{couponId}")
+    public void deleteCoupon(@PathVariable Long couponId) {
+        couponService.deleteCoupon(couponId);
+    }
+
     private CouponResponseDto convertToResponseDto(Coupon coupon) {
         CouponResponseDto dto = new CouponResponseDto();
         dto.setId(coupon.getId());

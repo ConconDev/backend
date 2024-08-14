@@ -67,6 +67,14 @@ public class CouponService {
         return couponRepository.save(coupon);
     }
 
+    // 쿠폰 삭제 메서드
+    public void deleteCoupon(Long couponId) {
+        if (!couponRepository.existsById(couponId)) {
+            throw new IllegalArgumentException("Invalid coupon ID");
+        }
+        couponRepository.deleteById(couponId);
+    }
+
     private String saveFile(MultipartFile file) {
         return "file_path";
     }
