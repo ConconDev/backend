@@ -4,6 +4,7 @@ import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Coupon.dto.CouponRequestDto;
 import com.sookmyung.concon.Coupon.dto.CouponResponseDto;
 import com.sookmyung.concon.Coupon.service.CouponService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,10 +12,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/coupons")
+@RequiredArgsConstructor
 public class CouponController {
-
-    @Autowired
-    private CouponService couponService;
+    final private CouponService couponService;
 
     @PostMapping
     public CouponResponseDto createCoupon(@ModelAttribute CouponRequestDto requestDto) {
