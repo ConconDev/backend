@@ -1,68 +1,67 @@
 package com.sookmyung.concon.Coupon.service;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
+import com.sookmyung.concon.Coupon.dto.CouponRequestDto;
+import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
+import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
 import com.sookmyung.concon.Coupon.repository.CouponRepository;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.repository.ItemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sookmyung.concon.User.Entity.User;
+import com.sookmyung.concon.User.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CouponService {
+    private final CouponRepository couponRepository;
+    private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
-    @Autowired
-    private CouponRepository couponRepository;
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 학생을 조회할 수 없습니다. "));
+    }
 
-    @Autowired
-    private ItemRepository itemRepository;
+    private Item findItemById(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이템을 조회할 수 없습니다. "));
+    }
 
-    public Coupon saveCoupon(Long userId, String barcode, MultipartFile barcodeImage, MultipartFile image, Long itemId, String name, Double price, String expirationDateStr) {
+    // TODO : 수정 예정
+    private User findUserByToken(String token) {
+        return null;
+    }
 
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("Invalid item ID"));
+    public CouponDetailResponseDto saveCoupon(CouponRequestDto request) {
 
-        Coupon coupon = new Coupon();
-        coupon.setUserId(userId);
-        coupon.setBarcode(barcode);
-
-        // Barcode 및 이미지 파일 처리
-        String barcodeImagePath = saveFile(barcodeImage);
-        String imagePath = saveFile(image);
-        coupon.setBarcodeImagePath(barcodeImagePath);
-        coupon.setImagePath(imagePath);
-
-        coupon.setItem(item);
-        coupon.setName(name);
-        coupon.setPrice(price);
-
-        // 만료일자 처리
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate expirationDate = LocalDate.parse(expirationDateStr, formatter);
-        coupon.setExpirationDate(expirationDate);
+        User user = findUserById(request.getUserId());
+        Item item = findItemById(request.getItemId());
+        Coupon coupon = request.toEntity(user, item);
 
         // 기본 값 설정
-        coupon.setUsedFlag(false);
         coupon.setBuyFlag(false);
 
-        return couponRepository.save(coupon);
+        couponRepository.save(coupon);
+
+        // TODO : 이미지 처리
+        return CouponDetailResponseDto.toDto(coupon, null, null);
     }
 
-    public List<Coupon> getCouponsByUserId(Long userId) {
-        return couponRepository.findByUserId(userId);
-    }
-
-    public List<Coupon> getCouponsByUserIdAndUsedFlag(Long userId, Boolean usedFlag) {
-        return couponRepository.findByUserIdAndUsedFlag(userId, usedFlag);
+    // 나의 모든 쿠폰 조회
+    public List<CouponSimpleResponseDto> getAllMyCoupon(String token) {
+        User user = findUserByToken(token);
+        return couponRepository.findByUser(user).stream()
+                .map(coupon -> CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null))
+                .toList();
     }
 
     // 예시로 플래그 값을 업데이트하는 메서드
-    public Coupon updateCouponStatus(Long couponId, Boolean usedFlag, Boolean buyFlag) {
+    public Coupon updateCouponStatus(Long couponId, Boolean buyFlag) {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("Invalid coupon ID"));
-        coupon.setUsedFlag(usedFlag);
         coupon.setBuyFlag(buyFlag);
         return couponRepository.save(coupon);
     }
@@ -73,9 +72,5 @@ public class CouponService {
             throw new IllegalArgumentException("Invalid coupon ID");
         }
         couponRepository.deleteById(couponId);
-    }
-
-    private String saveFile(MultipartFile file) {
-        return "file_path";
     }
 }

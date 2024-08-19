@@ -2,25 +2,20 @@ package com.sookmyung.concon.Coupon.Entity;
 
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.User.Entity.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "coupon")
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Coupon {
 
     @Id
+    @Column(name = "coupon_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -34,7 +29,7 @@ public class Coupon {
 
     private String barcode;
 
-    private String barcodeImagePath;
+    private String barcodeImageFileName;
 
     private String imageFileName;
 
@@ -46,5 +41,9 @@ public class Coupon {
 
     private LocalDate usedDate;
 
-    private Boolean buyFlag;   // 구매 여부
+    private String category;
+
+    @Setter
+    private boolean buyFlag;   // 구매 여부
+
 }
