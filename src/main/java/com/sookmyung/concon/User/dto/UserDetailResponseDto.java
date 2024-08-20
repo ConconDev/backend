@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class UserDetailResponseDto {
     private Long id;
-    private String name;
+    private String username;
     private Gender gender;
     private int age;
     private String profileUrl;
@@ -17,7 +17,7 @@ public class UserDetailResponseDto {
     public static UserDetailResponseDto toDto(User user, String profileUrl) {
         return UserDetailResponseDto.builder()
                 .id(user.getId())
-                .name(user.getName())
+                .username(user.getUsername())
                 .gender(user.getGender())
                 .age(user.getAge())
                 .profileUrl(profileUrl)

@@ -8,13 +8,13 @@ import java.util.Optional;
 
 @Getter
 public class UserCreateRequestDto {
-    private String name;
+    private String username;
     private Gender gender;
     private int age;
     private String profileImage;
     public User toEntity() {
         return User.builder()
-                .name(name)
+                .username(username)
                 .gender(gender)
                 .age(age)
                 .profileImage(profileImage)

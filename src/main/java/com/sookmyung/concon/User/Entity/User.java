@@ -19,11 +19,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String username;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private int age;
+
+    private String email;
+    private String password;
 
     // 프로필 사진
     private String profileImage;
@@ -31,10 +34,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Friendship> friendship;
 
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 
 
     public void update(String name, Gender gender, int age) {
-        if (!this.name.equals(name)) this.name = name;
+        if (!this.username.equals(name)) this.username = name;
         if (this.gender != gender) this.gender = gender;
         if (this.age != age) this.age = age;
     }

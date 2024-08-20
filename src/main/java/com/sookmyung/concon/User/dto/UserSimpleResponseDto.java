@@ -12,7 +12,7 @@ public class UserSimpleResponseDto {
 
     public static UserSimpleResponseDto toDto(User user, String profileUrl) {
         return UserSimpleResponseDto.builder()
-                .name(user.getName())
+                .name(user.getUsername())
                 .profileUrl(profileUrl)
                 .build();
     }

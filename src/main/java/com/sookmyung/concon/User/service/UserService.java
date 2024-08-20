@@ -1,6 +1,7 @@
 package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.User.Entity.User;
+import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserCreateRequestDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
@@ -15,9 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     public User findUserByToken(String token) {
-        return null;
+        return userRepository.findByEmail(jwtUtil.getEmail(token))
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
     }
 
     // 회원 가입
@@ -28,7 +31,6 @@ public class UserService {
     }
 
     // 나의 정보 조회
-    // TODO : token 수정
     // TODO : 프로필 사진 수정
     public UserDetailResponseDto getUserInfo(String token) {
         User user = findUserByToken(token);
@@ -54,7 +56,7 @@ public class UserService {
     // 회원 정보 수정
     public Long modifyUser(String token, UserModifyRequestDto request) {
         User user = findUserByToken(token);
-        user.update(request.getName(), request.getGender(), request.getAge());
+        user.update(request.getUsername(), request.getGender(), request.getAge());
         return user.getId();
     }
 

@@ -3,6 +3,7 @@ package com.sookmyung.concon.User.service;
 import com.sookmyung.concon.User.Entity.Friendship;
 import com.sookmyung.concon.User.Entity.FriendshipStatus;
 import com.sookmyung.concon.User.Entity.User;
+import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import com.sookmyung.concon.User.repository.FriendshipRepository;
 import com.sookmyung.concon.User.repository.UserRepository;
@@ -18,10 +19,11 @@ import java.util.List;
 public class FriendService {
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
+    private final JwtUtil jwtUtil;
 
-    // TODO : 함수 완성
-    private User findUserByToken(String token) {
-        return null;
+    public User findUserByToken(String token) {
+        return userRepository.findByEmail(jwtUtil.getEmail(token))
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
     }
 
     private User findUserById(Long userId) {
