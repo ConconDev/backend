@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class Orders {
     @Id
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,9 @@ public class Order {
 
     private String title;
     private String content;
-    private int price;
-    private LocalDate created_date;
-    private LocalDate transaction_date;
+    private double price;
+    private LocalDate createdDate;
+    private LocalDate transactionDate;
 
     private OrderStatus statue;
 

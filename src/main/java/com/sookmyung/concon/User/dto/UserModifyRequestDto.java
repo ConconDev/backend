@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class UserModifyRequestDto {
-    private String name;
+    private String username;
     private Gender gender;
     private int age;
 }
