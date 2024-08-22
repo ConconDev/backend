@@ -10,6 +10,7 @@ import com.sookmyung.concon.Order.dto.OrderDetailResponseDto;
 import com.sookmyung.concon.Order.dto.OrderSimpleResponseDto;
 import com.sookmyung.concon.Order.entity.OrderStatus;
 import com.sookmyung.concon.Order.entity.Orders;
+import com.sookmyung.concon.Order.repository.OrderRedisRepository;
 import com.sookmyung.concon.Order.repository.OrderRepository;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
@@ -32,6 +33,8 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final JwtUtil jwtUtil;
 
+    private final OrderRedisRepository orderRedisRepository;
+
     private Coupon findCouponById(Long couponId) {
         return couponRepository.findById(couponId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 쿠폰을 조회할 수 없습니다. "));
@@ -45,6 +48,11 @@ public class OrderService {
     private User findUserByToken(String token) {
         return userRepository.findByEmail(jwtUtil.getEmail(token))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
+    }
+
+    private Orders findOrdersById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 조회할 수 없습니다."));
     }
 
     // 판매 생성
@@ -98,7 +106,7 @@ public class OrderService {
     public List<OrderSimpleResponseDto> getAllOrdersByItemId(Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목을 조회할 수 없습니다."));
-        List<Orders> orders = orderRepository.findByItemAndStatus(item, OrderStatus.AVAILABLE);
+        List<Orders> orders = orderRepository.findAllByItemAndStatus(item, OrderStatus.AVAILABLE);
         return orders.stream().map(order ->
                 OrderSimpleResponseDto.toDto(order,
                         CouponSimpleResponseDto.toDto(order.getCoupon(),
@@ -106,7 +114,25 @@ public class OrderService {
                         UserIdResponseDto.toDto(order.getSeller()))).toList();
     }
 
-    // 거래 요청 & 수락
+    // 거래 요청
+    public void requestOrder(Long orderId, String token) {
+        Orders orders = findOrdersById(orderId);
+        User user = findUserByToken(token);
+        orderRedisRepository.save(orders.getId(), user.getId());
+    }
+
+    // 거래 요청 전체 조회
+    public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
+        return orderRedisRepository.findById(orderId)
+                .stream().map(Long::parseLong)
+                .map(this::findUserById)
+                .map(user -> UserSimpleResponseDto.toDto(user, null))
+                .toList();
+    }
+
+    // 거래 수락
+
+
 
     // 거래 수정
 

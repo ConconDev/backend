@@ -15,6 +15,10 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 
     List<Orders> findBySellerAndStatus(User seller, OrderStatus status);
 
-    @Query("SELECT o FROM Orders o JOIN o.coupon c WHERE c.item = :item")
-    List<Orders> findByItemAndStatus(@Param("item") Item item, OrderStatus status);
+    @Query("SELECT o FROM Orders o " +
+            "JOIN o.coupon c " +
+            "WHERE c.item = :item " +
+            "AND o.status = :status")
+    List<Orders> findAllByItemAndStatus(@Param("item") Item item,
+                                        @Param("status") OrderStatus status);
 }
