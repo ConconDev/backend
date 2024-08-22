@@ -4,9 +4,11 @@ import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Order.entity.OrderStatus;
 import com.sookmyung.concon.User.Entity.User;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 public class OrderCreateRequestDto {
     private Long couponId;
     private Long sellerId;
@@ -14,7 +16,7 @@ public class OrderCreateRequestDto {
     private String content;
     private double price;
 
-    public Orders toEntity(OrderCreateRequestDto dto, Coupon coupon, User seller) {
+    public Orders toEntity(Coupon coupon, User seller) {
         return Orders.builder()
                 .coupon(coupon)
                 .seller(seller)
@@ -22,7 +24,7 @@ public class OrderCreateRequestDto {
                 .content(content)
                 .price(price)
                 .createdDate(LocalDate.now())
-                .statue(OrderStatus.AVAILABLE)
+                .status(OrderStatus.AVAILABLE)
                 .build();
     }
 }

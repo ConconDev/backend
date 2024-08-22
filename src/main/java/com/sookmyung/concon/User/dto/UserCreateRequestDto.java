@@ -12,11 +12,15 @@ public class UserCreateRequestDto {
     private Gender gender;
     private int age;
     private String profileImage;
-    public User toEntity() {
+    private String password;
+    private String email;
+    public User toEntity(String password) {
         return User.builder()
+                .email(email)
                 .username(username)
                 .gender(gender)
                 .age(age)
+                .password(password)
                 .profileImage(profileImage)
                 .build();
     }

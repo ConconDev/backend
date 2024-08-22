@@ -34,7 +34,7 @@ public class OrderDetailResponseDto {
                 .price(order.getPrice())
                 .createDate(order.getCreatedDate())
                 .transactionDate(order.getTransactionDate())
-                .status(order.getStatue())
+                .status(order.getStatus())
                 .build();
     }
 

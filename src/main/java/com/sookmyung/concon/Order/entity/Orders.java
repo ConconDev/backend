@@ -1,6 +1,7 @@
 package com.sookmyung.concon.Order.entity;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
+import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.User.Entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,13 @@ public class Orders {
     private LocalDate createdDate;
     private LocalDate transactionDate;
 
-    private OrderStatus statue;
+    private OrderStatus status;
 
-    public void updateStatus(OrderStatus statue) {
-        this.statue = statue;
+    public Item getItem() {
+        return coupon.getItem();
+    }
+
+    public void updateStatus(OrderStatus status) {
+        this.status = status;
     }
 }

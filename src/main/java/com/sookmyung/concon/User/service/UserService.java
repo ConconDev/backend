@@ -8,6 +8,7 @@ import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User findUserByToken(String token) {
         return userRepository.findByEmail(jwtUtil.getEmail(token))
@@ -25,7 +27,7 @@ public class UserService {
 
     // 회원 가입
     public Long join(UserCreateRequestDto request) {
-        User user = request.toEntity();
+        User user = request.toEntity(bCryptPasswordEncoder.encode(request.getPassword()));
         userRepository.save(user);
         return user.getId();
     }
