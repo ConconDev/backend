@@ -18,9 +18,6 @@ public class UserCreateRequestDto {
     private String password;
     private String email;
 
-    @Builder.Default
-    private RoleType role = RoleType.USER;
-
     public User toEntity(String password) {
         return User.builder()
                 .email(email)

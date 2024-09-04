@@ -26,6 +26,4 @@ public class SwaggerConfig {
                 .bearerFormat("JWT")
                 .scheme("bearer");
     }
-
-
 }
