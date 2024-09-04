@@ -31,8 +31,8 @@ public class User {
     // 프로필 사진
     private String profileImage;
 
-    @OneToMany(mappedBy = "user")
-    private List<Friendship> friendship;
+//    @OneToMany(mappedBy = "sender")
+//    private List<Friendship> friendship;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;

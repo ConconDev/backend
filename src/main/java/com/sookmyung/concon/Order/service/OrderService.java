@@ -10,7 +10,7 @@ import com.sookmyung.concon.Order.dto.OrderDetailResponseDto;
 import com.sookmyung.concon.Order.dto.OrderSimpleResponseDto;
 import com.sookmyung.concon.Order.entity.OrderStatus;
 import com.sookmyung.concon.Order.entity.Orders;
-import com.sookmyung.concon.Order.repository.OrderRedisRepository;
+import com.sookmyung.concon.Order.repository.OrderRequestRedisRepository;
 import com.sookmyung.concon.Order.repository.OrderRepository;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
@@ -33,7 +33,7 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final JwtUtil jwtUtil;
 
-    private final OrderRedisRepository orderRedisRepository;
+    private final OrderRequestRedisRepository orderRequestRedisRepository;
 
     private Coupon findCouponById(Long couponId) {
         return couponRepository.findById(couponId)
@@ -118,12 +118,12 @@ public class OrderService {
     public void requestOrder(Long orderId, String token) {
         Orders orders = findOrdersById(orderId);
         User user = findUserByToken(token);
-        orderRedisRepository.save(orders.getId(), user.getId());
+        orderRequestRedisRepository.save(orders.getId(), user.getId());
     }
 
     // 거래 요청 전체 조회
     public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
-        return orderRedisRepository.findById(orderId)
+        return orderRequestRedisRepository.findById(orderId)
                 .stream().map(Long::parseLong)
                 .map(this::findUserById)
                 .map(user -> UserSimpleResponseDto.toDto(user, null))

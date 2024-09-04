@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderRedisRepository {
+public class OrderRequestRedisRepository {
     private final RedisTemplate<String, String> orderRedisTemplate;
     private static final String ORDER_KEY = "orderId:";
 
@@ -18,6 +18,8 @@ public class OrderRedisRepository {
         ListOperations<String, String> listOperations = orderRedisTemplate.opsForList();
         listOperations.leftPush(ORDER_KEY + orderId, userId.toString());
     }
+
+
 
     public List<String> findById(Long orderId) {
         ListOperations<String, String> listOperations = orderRedisTemplate.opsForList();
