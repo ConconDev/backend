@@ -2,7 +2,6 @@ package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
-import com.sookmyung.concon.User.dto.UserCreateRequestDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
@@ -19,7 +18,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     public User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token))
+        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
     }
 
@@ -31,8 +30,8 @@ public class UserService {
     }
 
     // id로 회원 정보 조회
-    public UserDetailResponseDto getUserInfoById(Long id) {
-        User user = userRepository.findById(id)
+    public UserDetailResponseDto getUserInfoById(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
         return UserDetailResponseDto.toDto(user, null);
     }

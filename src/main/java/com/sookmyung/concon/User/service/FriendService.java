@@ -22,7 +22,7 @@ public class FriendService {
     private final JwtUtil jwtUtil;
 
     public User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token))
+        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
     }
 
