@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,10 +24,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+@Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, String loginProcessingUrl) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        setFilterProcessesUrl(loginProcessingUrl);
+    }
 
     CachedBodyHttpServletRequest cachedBodyHttpServletRequest;
 
@@ -41,6 +48,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String email = null;
         String password = null;
 
+        log.info("여기는 실행");
         try {
             cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(request);
             if ("application/json".equals(cachedBodyHttpServletRequest.getContentType())) {
@@ -84,6 +92,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
         HttpServletResponse response, AuthenticationException failed)
+
         throws IOException, ServletException {
 
 
