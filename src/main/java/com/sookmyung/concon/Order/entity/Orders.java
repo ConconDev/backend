@@ -40,6 +40,7 @@ public class Orders {
     private LocalDate createdDate;
     private LocalDate transactionDate;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     public Item getItem() {

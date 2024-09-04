@@ -19,12 +19,12 @@ public class Friendship {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id")
-    private User friend;    // 친구 요청을 받는 쪽
+    @JoinColumn(name = "receiver_id")
+    private User receiver;    // 친구 요청을 받는 쪽
 
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
