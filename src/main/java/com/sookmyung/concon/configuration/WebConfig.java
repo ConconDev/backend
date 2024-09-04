@@ -1,4 +1,4 @@
-package com.sookmyung.concon.User.config;
+package com.sookmyung.concon.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

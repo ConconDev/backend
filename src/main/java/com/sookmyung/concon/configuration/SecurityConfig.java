@@ -1,4 +1,4 @@
-package com.sookmyung.concon.User.config;
+package com.sookmyung.concon.configuration;
 
 import com.sookmyung.concon.User.Jwt.JwtFilter;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
@@ -53,24 +53,22 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
+
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/api/auth/signUp", "/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/", "/api/auth/login", "/api/auth/signUp", "/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated());
 
-        http
-                .formLogin(form -> form
-                        .loginProcessingUrl("/api/auth/login")
-                        .permitAll());
 
-        http
-                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
 
         // 현재 disable 되어있는 UsernamePasswordAuthenticationFilter 대신에 filter를 넣어줄 것이기 때문에 addFilterAt 사용
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, "/api/auth/login"), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
+
 
         http
                 .sessionManagement((session) -> session

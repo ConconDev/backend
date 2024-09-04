@@ -2,7 +2,7 @@ package com.sookmyung.concon.User.controller;
 
 import com.sookmyung.concon.User.dto.LoginRequestDto;
 import com.sookmyung.concon.User.dto.UserCreateRequestDto;
-import com.sookmyung.concon.User.service.UserService;
+import com.sookmyung.concon.User.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(
@@ -22,7 +22,7 @@ public class AuthController {
     @PostMapping("/signUp")
     public ResponseEntity<Long> signUp(
             @RequestBody UserCreateRequestDto request) {
-        return ResponseEntity.ok(userService.join(request));
+        return ResponseEntity.ok(authService.join(request));
     }
 
     @PostMapping("/logout")
