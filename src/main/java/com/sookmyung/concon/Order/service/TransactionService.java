@@ -14,14 +14,17 @@ import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionService {
     private static final String ORDER_REQUESTED = "orderRequested";
     private static final String ORDER_ACCEPTED = "orderAccepted";
@@ -49,7 +52,7 @@ public class TransactionService {
 
     // 토큰으로 사용자 찾기
     private User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token).split(" ")[1])
+        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
     }
 
@@ -57,7 +60,7 @@ public class TransactionService {
         Coupon coupon = order.getCoupon();
         return OrderDetailResponseDto.toDto(order,
                 CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null)
-                , UserSimpleResponseDto.toDto(order.getBuyer()), UserSimpleResponseDto.toDto(order.getSeller()));
+                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer()) : null, UserSimpleResponseDto.toDto(order.getSeller()));
     }
 
     // 거래 요청
@@ -72,7 +75,7 @@ public class TransactionService {
 
         // 판매자에게 알람
         Long sellerId = orders.getSeller().getId();
-        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(orders);
+        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(orders, buyer);
         eventPublisher.publishEvent(sellerId, ORDER_REQUESTED, response);
         return OrderRequestResponseDto.toDto(orders, buyer);
     }
@@ -80,8 +83,8 @@ public class TransactionService {
     // 거래 요청 전체 조회
     @Transactional(readOnly = true)
     public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
-        return orderRequestRedisRepository.findById(orderId)
-                .stream().map(Long::parseLong)
+        return orderRequestRedisRepository.findAllMembersById(orderId)
+                .stream()
                 .map(this::findUserById)
                 .map(UserSimpleResponseDto::toDto)
                 .toList();
@@ -92,13 +95,14 @@ public class TransactionService {
     public OrderDetailResponseDto acceptTransaction(TransactionAcceptRequestDto request) {
         Orders order = findOrdersById(request.getOrderId());
         User buyer = findUserById(request.getBuyerId());
+
         order.setBuyer(buyer);
         order.updateStatus(OrderStatus.IN_PROGRESS);
 
         orderRequestRedisRepository.deleteUser(request.getOrderId(), request.getBuyerId());
 
         // 구매자에게 알람
-        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order);
+        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, buyer);
         eventPublisher.publishEvent(buyer.getId(), ORDER_ACCEPTED, response);
 
         return toOrderDetailDto(order);
@@ -108,12 +112,13 @@ public class TransactionService {
     @Transactional
     public OrderDetailResponseDto cancelTransaction(Long orderId) {
         Orders order = findOrdersById(orderId);
+        User buyer = order.getBuyer();
         order.setBuyer(null);
         order.updateStatus(OrderStatus.AVAILABLE);
 
         // 둘 다에게 알람
-        List<Long> userIds = List.of(order.getSeller().getId(), order.getBuyer().getId());
-        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order);
+        List<Long> userIds = List.of(order.getSeller().getId(), buyer.getId());
+        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, buyer);
         eventPublisher.publishEventToMultipleUsers(userIds, ORDER_CANCELED, response);
 
         return toOrderDetailDto(order);
@@ -123,7 +128,6 @@ public class TransactionService {
     @Transactional
     public OrderDetailResponseDto completeTransaction(Long orderId) {
         Orders order = findOrdersById(orderId);
-        order.setBuyer(null);
         order.updateStatus(OrderStatus.COMPLETED);
         order.setTransactionDate(LocalDate.now());
 
@@ -134,7 +138,7 @@ public class TransactionService {
         orderRequestRedisRepository.delete(orderId);
 
         // 구매자에게 알람
-        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order);
+        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, order.getBuyer());
         eventPublisher.publishEvent(order.getBuyer().getId(), ORDER_COMPLETED, response);
 
         return toOrderDetailDto(order);

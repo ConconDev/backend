@@ -47,7 +47,7 @@ public class OrderService {
 
     // 토큰으로 사용자 찾기
     private User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token).split(" ")[1])
+        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
     }
 
@@ -65,7 +65,7 @@ public class OrderService {
         Coupon coupon = order.getCoupon();
         return OrderDetailResponseDto.toDto(order,
                 CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null)
-                , UserSimpleResponseDto.toDto(order.getBuyer()), UserSimpleResponseDto.toDto(order.getSeller()));
+                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer()) : null, UserSimpleResponseDto.toDto(order.getSeller()));
     }
 
     // List<OrderSimpleResponseDto> 변환 메소드
@@ -141,7 +141,7 @@ public class OrderService {
     @Transactional
     public OrderDetailResponseDto modifyOrder(OrderModifyRequestDto request) {
         Orders order = findOrdersById(request.getOrderId());
-        order.update(request.getTitle(), request.getContent());
+        order.update(request.getTitle(), request.getContent(), request.getPrice());
         return toOrderDetailDto(order);
     }
 

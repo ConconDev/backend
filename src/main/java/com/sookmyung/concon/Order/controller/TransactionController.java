@@ -18,7 +18,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     // 거래 요청
-    @PostMapping("/transaction/request/{order-id}")
+    @PostMapping("/request/{order-id}")
     public ResponseEntity<OrderRequestResponseDto> requestOrder(
             @PathVariable("order-id") Long orderId,
             @RequestHeader("Authorization") String token) {
@@ -26,28 +26,28 @@ public class TransactionController {
     }
 
     // 거래 요청 전체 조회
-    @GetMapping("/transaction/request/{order-id}")
+    @GetMapping("/request/{order-id}")
     public ResponseEntity<List<UserSimpleResponseDto>> getAllRequestOrder(
             @PathVariable("order-id") Long orderId) {
         return ResponseEntity.ok(transactionService.getAllRequestOrder(orderId));
     }
 
     // 거래 수락 (거래 중)
-    @PostMapping("/transaction/accept")
+    @PostMapping("/accept")
     public ResponseEntity<OrderDetailResponseDto> acceptTransaction(
             @RequestBody TransactionAcceptRequestDto request) {
         return ResponseEntity.ok(transactionService.acceptTransaction(request));
     }
 
     // 거래 중 취소
-    @PostMapping("/transaction/cancel/{order-id}")
+    @PostMapping("/cancel/{order-id}")
     public ResponseEntity<OrderDetailResponseDto> cancelTransaction(
             @PathVariable("order-id") Long orderId) {
         return ResponseEntity.ok(transactionService.cancelTransaction(orderId));
     }
 
     // 거래 완료
-    @PostMapping("/transaction/complete/{order-id}")
+    @PostMapping("/complete/{order-id}")
     public ResponseEntity<OrderDetailResponseDto> completeTransaction(
             @PathVariable("order-id") Long orderId) {
         return ResponseEntity.ok(transactionService.completeTransaction(orderId));

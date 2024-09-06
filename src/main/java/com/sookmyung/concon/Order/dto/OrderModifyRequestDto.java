@@ -7,4 +7,5 @@ public class OrderModifyRequestDto {
     private Long orderId;
     private String title;
     private String content;
+    private double price;
 }

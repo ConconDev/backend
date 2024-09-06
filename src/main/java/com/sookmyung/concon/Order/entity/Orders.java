@@ -29,8 +29,11 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "buyer_id")
-    @Setter
     private User buyer;
+
+    public void setBuyer(User buyer) {
+        this.buyer = buyer;
+    }
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
@@ -55,8 +58,9 @@ public class Orders {
         this.status = status;
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, double price) {
         this.title = title;
         this.content = content;
+        this.price = price;
     }
 }

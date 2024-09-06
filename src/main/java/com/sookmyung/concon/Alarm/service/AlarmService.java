@@ -17,7 +17,7 @@ public class AlarmService {
 
     // 토큰으로 사용자 찾기
     private User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token).split(" ")[1])
+        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
     }
 

@@ -15,14 +15,14 @@ public class OrderEventAlarmDto {
     private Long buyerId;
     private String buyerName;
 
-    public static OrderEventAlarmDto toDto(Orders orders) {
+    public static OrderEventAlarmDto toDto(Orders orders, User buyer) {
         return OrderEventAlarmDto.builder()
                 .orderId(orders.getId())
                 .orderTitle(orders.getTitle())
                 .sellerId(orders.getSeller().getId())
                 .sellerName(orders.getSeller().getUsername())
-                .buyerId(orders.getBuyer().getId())
-                .buyerName(orders.getBuyer().getUsername())
+                .buyerId(buyer.getId())
+                .buyerName(buyer.getUsername())
                 .build();
     }
 }
