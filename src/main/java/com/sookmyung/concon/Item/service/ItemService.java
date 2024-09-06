@@ -2,15 +2,15 @@ package com.sookmyung.concon.Item.service;
 
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.repository.ItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ItemService {
-
-    @Autowired
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
     public List<Item> getAllItems() {
         return itemRepository.findAll();

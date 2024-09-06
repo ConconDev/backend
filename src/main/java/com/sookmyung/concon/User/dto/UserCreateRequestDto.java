@@ -14,18 +14,18 @@ public class UserCreateRequestDto {
     private String username;
     private Gender gender;
     private int age;
-    private String profileImage;
+    private String profileImageName;
     private String password;
     private String email;
 
-    public User toEntity(String password) {
+    public User toEntity(String password, String profileUrl) {
         return User.builder()
                 .email(email)
                 .username(username)
                 .gender(gender)
                 .age(age)
                 .password(password)
-                .profileImage(profileImage)
+                .profileUrl(profileUrl)
                 .role(RoleType.USER)
                 .build();
     }

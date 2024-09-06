@@ -1,16 +1,18 @@
 package com.sookmyung.concon.Coupon.service;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
-import com.sookmyung.concon.Coupon.dto.CouponRequestDto;
+import com.sookmyung.concon.Coupon.dto.CouponCreateRequestDto;
 import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
 import com.sookmyung.concon.Coupon.repository.CouponRepository;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.repository.ItemRepository;
 import com.sookmyung.concon.User.Entity.User;
+import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+
+    private final JwtUtil jwtUtil;
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
@@ -31,19 +35,18 @@ public class CouponService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이템을 조회할 수 없습니다. "));
     }
 
-    // TODO : 수정 예정
+    // 토큰으로 사용자 찾기
     private User findUserByToken(String token) {
-        return null;
+        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
     }
 
-    public CouponDetailResponseDto saveCoupon(CouponRequestDto request) {
+    @Transactional
+    public CouponDetailResponseDto saveCoupon(CouponCreateRequestDto request) {
 
         User user = findUserById(request.getUserId());
         Item item = findItemById(request.getItemId());
         Coupon coupon = request.toEntity(user, item);
-
-        // 기본 값 설정
-        coupon.setBuyFlag(false);
 
         couponRepository.save(coupon);
 
@@ -52,6 +55,7 @@ public class CouponService {
     }
 
     // 나의 모든 쿠폰 조회
+    @Transactional(readOnly = true)
     public List<CouponSimpleResponseDto> getAllMyCoupon(String token) {
         User user = findUserByToken(token);
         return couponRepository.findByUser(user).stream()
@@ -60,6 +64,7 @@ public class CouponService {
     }
 
     // 예시로 플래그 값을 업데이트하는 메서드
+    @Transactional
     public Coupon updateCouponStatus(Long couponId, Boolean buyFlag) {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("Invalid coupon ID"));
         coupon.setBuyFlag(buyFlag);
@@ -67,6 +72,7 @@ public class CouponService {
     }
 
     // 쿠폰 삭제 메서드
+    @Transactional
     public void deleteCoupon(Long couponId) {
         if (!couponRepository.existsById(couponId)) {
             throw new IllegalArgumentException("Invalid coupon ID");

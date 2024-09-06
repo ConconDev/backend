@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class CouponRequestDto {
+public class CouponCreateRequestDto {
 
     private Long userId;
     private Long itemId;
@@ -25,10 +25,11 @@ public class CouponRequestDto {
                 .item(item)
                 .barcode(barcode)
                 .barcodeImageFileName(barcodeImage)
-                .imageFileName(imageFileName)
+                .imageUrl(imageFileName)
                 .name(name)
                 .price(price)
                 .expirationDate(expirationDate)
+                .buyFlag(false)
                 .build();
     }
 }
