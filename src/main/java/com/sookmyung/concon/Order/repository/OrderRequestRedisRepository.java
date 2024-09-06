@@ -25,4 +25,12 @@ public class OrderRequestRedisRepository {
         ListOperations<String, String> listOperations = orderRedisTemplate.opsForList();
         return listOperations.range(ORDER_KEY + orderId, 0, -1);
     }
+
+    public void deleteUser(Long orderId, Long userId) {
+        orderRedisTemplate.opsForList().remove(ORDER_KEY + orderId, 0, userId + "");
+    }
+
+    public void delete(Long orderId) {
+        orderRedisTemplate.delete(ORDER_KEY + orderId);
+    }
 }

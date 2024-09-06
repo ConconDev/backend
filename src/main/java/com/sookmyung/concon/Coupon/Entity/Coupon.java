@@ -46,4 +46,8 @@ public class Coupon {
     @Setter
     private boolean buyFlag;   // 구매 여부
 
+    public void changeUser(User user) {
+        this.user = user;
+    }
+
 }

@@ -29,7 +29,7 @@ public class User {
     private String password;
 
     // 프로필 사진
-    private String profileImage;
+    private String profileUrl;
 
 //    @OneToMany(mappedBy = "sender")
 //    private List<Friendship> friendship;

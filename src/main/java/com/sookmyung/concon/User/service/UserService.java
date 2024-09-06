@@ -40,7 +40,7 @@ public class UserService {
     public List<UserSimpleResponseDto> getUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> UserSimpleResponseDto.toDto(user, null))
+                .map(UserSimpleResponseDto::toDto)
                 .toList();
     }
 

@@ -4,10 +4,7 @@ import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.User.Entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -32,6 +29,7 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "buyer_id")
+    @Setter
     private User buyer;
 
     @ManyToOne
@@ -42,6 +40,8 @@ public class Orders {
     private String content;
     private double price;
     private LocalDate createdDate;
+
+    @Setter
     private LocalDate transactionDate;
 
     @Enumerated(EnumType.STRING)
@@ -53,5 +53,10 @@ public class Orders {
 
     public void updateStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }

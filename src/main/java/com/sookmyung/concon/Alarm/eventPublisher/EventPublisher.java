@@ -1,12 +1,14 @@
 package com.sookmyung.concon.Alarm.eventPublisher;
 
 import com.sookmyung.concon.Alarm.repository.EmitterMemoryRepository;
+import com.sookmyung.concon.User.Entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,12 @@ public class EventPublisher {
     }
 
     // 다중 사용자에게 알람
+    public void publishEventToMultipleUsers(List<Long> userIds, String eventName, Object data) {
+        for (Long userId : userIds) {
+            publishEvent(userId, eventName, data);
+        }
+    }
+
     // 특정 조건의 사용자에게 알람
     // 모든 사용자에게 알람
 }
