@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Getter
 public class OrderDetailResponseDto {
     private Long id;
+    private String imageUrl;
     private CouponSimpleResponseDto coupon;
     private UserSimpleResponseDto buyer;
     private UserSimpleResponseDto seller;
@@ -23,9 +24,11 @@ public class OrderDetailResponseDto {
     private LocalDate transactionDate;
     private OrderStatus status;
 
+
     public static OrderDetailResponseDto toDto(Orders order, CouponSimpleResponseDto coupon, UserSimpleResponseDto buyer, UserSimpleResponseDto seller) {
         return OrderDetailResponseDto.builder()
                 .id(order.getId())
+                .imageUrl(order.getImageUrl())
                 .coupon(coupon)
                 .buyer(buyer)
                 .seller(seller)

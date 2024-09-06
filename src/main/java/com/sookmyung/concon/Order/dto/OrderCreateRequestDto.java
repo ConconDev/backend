@@ -16,7 +16,7 @@ public class OrderCreateRequestDto {
     private String content;
     private double price;
 
-    public Orders toEntity(Coupon coupon, User seller) {
+    public Orders toEntity(Coupon coupon, User seller, String imageUrl) {
         return Orders.builder()
                 .coupon(coupon)
                 .seller(seller)
@@ -25,6 +25,7 @@ public class OrderCreateRequestDto {
                 .price(price)
                 .createdDate(LocalDate.now())
                 .status(OrderStatus.AVAILABLE)
+                .imageUrl(imageUrl)
                 .build();
     }
 }

@@ -31,7 +31,7 @@ public class Coupon {
 
     private String barcodeImageFileName;
 
-    private String imageFileName;
+    private String imageUrl;
 
     private String name;
 

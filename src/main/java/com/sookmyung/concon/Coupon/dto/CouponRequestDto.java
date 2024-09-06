@@ -25,7 +25,7 @@ public class CouponRequestDto {
                 .item(item)
                 .barcode(barcode)
                 .barcodeImageFileName(barcodeImage)
-                .imageFileName(imageFileName)
+                .imageUrl(imageFileName)
                 .name(name)
                 .price(price)
                 .expirationDate(expirationDate)
