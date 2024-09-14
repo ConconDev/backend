@@ -24,7 +24,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build --exclude-task test
+        run: |
+          echo ${{secrets.APPLICATION_SECRET_YML}} | base64 --decode > ./src/main/resources/application-secret.properties
+          ./gradlew clean build --exclude-task test
 
 #      - name: Get current time
 #        uses: josStorer/get-current-time@v2.0.2
