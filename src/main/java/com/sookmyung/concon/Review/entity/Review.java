@@ -28,5 +28,6 @@ public class Review {
     private Item item;
 
     private double score;
+
     private String content;
 }
