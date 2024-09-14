@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    #4 실행스텝지정
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build --exclude-task test
+
+#      - name: Get current time
+#        uses: josStorer/get-current-time@v2.0.2
+#        id: current-time
+#        with:
+#            format: YYYY-MM-DDTHH-mm-ss
+#            utcOffset: "+09:00"
+#
+#      - name: Set artifact
+#        run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+// 로그인 시 함께 실행되도록 함
 @RestController("/api/alarm")
 @RequiredArgsConstructor
 public class AlarmController {
