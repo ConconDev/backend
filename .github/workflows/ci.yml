@@ -16,7 +16,9 @@ env:
 
 jobs:
   build-and-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
+    environment: production
     #4 실행스텝지정
     steps:
       - name: Checkout source code
@@ -56,8 +58,8 @@ jobs:
       - name: Build, tag, and push image to Amazion ECR
         id: build-image
         env:
-         ECR_REGISTRY: ${{}}
-         IMAGE_TAG: ${{}}
+         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+         IMAGE_TAG: ${{ github.sha }}
         run: |
           cd docker-build
           docker build -t $ECR_REGISTRY/$ECR_REGISTRY:$IMAGE_TAG .
