@@ -49,12 +49,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Prepare Docker build context
-        run: |
-          mkdir -p docker-build
-          cp build/libs/*[!plain].jar docker-build/app.jar
-          cp Dockerfile docker-build/
-
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
