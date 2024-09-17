@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -6,8 +6,16 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: concon            # ECR 리포지토리 이름
+  ECS_SERVICE: my-ecs-service             # ECS 서비스 이름
+  ECS_CLUSTER: my-ecs-cluster             # ECS 클러스터 이름
+  ECS_TASK_DEFINITION: task-definition.json # ECS 태스크 정의 파일
+  CONTAINER_NAME: my-container
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     #4 실행스텝지정
     steps:
@@ -28,12 +36,46 @@ jobs:
           echo ${{secrets.APPLICATION_SECRET_YML}} | base64 --decode > ./src/main/resources/application-secret.properties
           ./gradlew clean build --exclude-task test
 
-#      - name: Get current time
-#        uses: josStorer/get-current-time@v2.0.2
-#        id: current-time
-#        with:
-#            format: YYYY-MM-DDTHH-mm-ss
-#            utcOffset: "+09:00"
-#
-#      - name: Set artifact
-#        run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Prepare Docker build context
+        run: |
+          mkdir -p docker-build
+          cp build/libs/*[!plain].jar docker-build/app.jar
+          cp Dockerfile docker-build/
+
+      - name: Build, tag, and push image to Amazion ECR
+        id: build-image
+        env:
+         ECR_REGISTRY: ${{}}
+         IMAGE_TAG: ${{}}
+        run: |
+          cd docker-build
+          docker build -t $ECR_REGISTRY/$ECR_REGISTRY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
