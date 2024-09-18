@@ -27,5 +27,7 @@ public class Item {
 
     private String brand;
 
+    private String category;
+
     private String imageUrl;
 }
