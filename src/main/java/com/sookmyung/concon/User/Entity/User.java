@@ -1,5 +1,6 @@
 package com.sookmyung.concon.User.Entity;
 
+import com.sookmyung.concon.Order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
+
+    @OneToMany(mappedBy = "seller")
+    private List<Orders> orders;
 
 
     public void update(String name, Gender gender, int age) {

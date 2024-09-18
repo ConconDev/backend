@@ -52,6 +52,9 @@ public class UserService {
         return user.getId();
     }
 
+    // 거래용 랜덤 5명의 판매 정보 가져오기
+
+
     // 회원 탈퇴
     public void deleteUser(String token) {
         User user = findUserByToken(token);
