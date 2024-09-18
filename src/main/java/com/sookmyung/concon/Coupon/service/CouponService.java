@@ -42,9 +42,9 @@ public class CouponService {
     }
 
     @Transactional
-    public CouponDetailResponseDto saveCoupon(CouponCreateRequestDto request) {
+    public CouponDetailResponseDto saveCoupon(String token, CouponCreateRequestDto request) {
 
-        User user = findUserById(request.getUserId());
+        User user = findUserByToken(token);
         Item item = findItemById(request.getItemId());
         Coupon coupon = request.toEntity(user, item);
 

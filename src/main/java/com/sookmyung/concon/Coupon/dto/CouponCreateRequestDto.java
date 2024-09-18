@@ -9,8 +9,6 @@ import java.time.LocalDate;
 
 @Getter
 public class CouponCreateRequestDto {
-
-    private Long userId;
     private Long itemId;
     private String barcode;
     private String barcodeImage;
