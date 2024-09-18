@@ -27,6 +27,4 @@ public interface OrderService {
     OrderDetailResponseDto modifyOrder(OrderModifyRequestDto request);
 
     void deleteOrder(Long orderId);
-
-    List<OrderSimpleResponseDto> get2TopOrdersByUser(User user);
 }

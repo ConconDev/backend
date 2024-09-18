@@ -1,5 +1,6 @@
 package com.sookmyung.concon.User.service;
 
+import com.sookmyung.concon.Item.service.ItemService;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,10 +19,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final OrderUserFacade orderUserFacade;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    private final ItemService itemService;
 
     // 나의 정보 조회
     // TODO : 프로필 사진 수정
+    @Override
     @Transactional(readOnly = true)
     public UserDetailConfigResponseDto getUserInfo(String token) {
         User user = orderUserFacade.findUserByToken(token);
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     // id로 회원 정보 조회
     // TODO : Review 추가하기
+    @Override
     @Transactional(readOnly = true)
     public UserDetailResponseDto getUserInfoById(Long userId) {
         User user = orderUserFacade.findUserById(userId);
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // 전체 회원 조회
+    @Override
     @Transactional(readOnly = true)
     public List<UserSimpleResponseDto> getUsers() {
         return userRepository.findAll()
@@ -62,14 +65,18 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDetailResponseDto> get5RandomUser() {
         List<User> randomUsers = userRepository.findRandomUsers();
-        List<UserDetailResponseDto> response = new ArrayList<>();
-        for (User user : randomUsers) {
-            UserDetailResponseDto dto = UserDetailResponseDto.toDto(user,
-                    orderUserFacade.get2TopOrdersByUser(user), null);
-            response.add(dto);
-        }
+        return orderUserFacade.toUserDetailResponseDtos(randomUsers);
+    }
 
-        return response;
+
+
+    // 아이템 이름으로 랜덤 5명의 판매 정보 가져오기
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDetailResponseDto> get5RandomUserByItemName(String itemName) {
+        Long itemId = itemService.getItemByName(itemName).getItemId();
+        List<User> randomUsers = userRepository.findRandomUsersByItem(itemId);
+        return orderUserFacade.toUserDetailResponseDtos(randomUsers);
     }
 
     // 회원 탈퇴
