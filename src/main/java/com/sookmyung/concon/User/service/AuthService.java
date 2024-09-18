@@ -18,7 +18,7 @@ public class AuthService {
         if (userRepository.existsUserByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이메일이 중복되었습니다. ");
         }
-        User user = request.toEntity(bCryptPasswordEncoder.encode(request.getPassword()), null);
+        User user = request.toEntity(bCryptPasswordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
         return user.getId();

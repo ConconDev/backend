@@ -1,5 +1,6 @@
 package com.sookmyung.concon.User.controller;
 
+import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
@@ -22,7 +23,7 @@ public class UserController {
     // 나의 정보 조회
     @Operation(summary = "나의 정보 상세 조회")
     @GetMapping
-    public ResponseEntity<UserDetailResponseDto> getUserInfo(
+    public ResponseEntity<UserDetailConfigResponseDto> getUserInfo(
             @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(userService.getUserInfo(token));
     }
@@ -45,7 +46,7 @@ public class UserController {
     // 회원 정보 수정
     @Operation(summary = "회원 정보 수정")
     @PutMapping
-    public ResponseEntity<Long> modifyUser(
+    public ResponseEntity<UserDetailConfigResponseDto> modifyUser(
             @RequestHeader("Authorization") String token,
             @RequestBody UserModifyRequestDto request) {
         return ResponseEntity.ok(userService.modifyUser(token, request));

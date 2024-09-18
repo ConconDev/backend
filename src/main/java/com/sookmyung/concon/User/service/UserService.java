@@ -2,6 +2,7 @@ package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
+import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
@@ -24,16 +25,16 @@ public class UserService {
 
     // 나의 정보 조회
     // TODO : 프로필 사진 수정
-    public UserDetailResponseDto getUserInfo(String token) {
+    public UserDetailConfigResponseDto getUserInfo(String token) {
         User user = findUserByToken(token);
-        return UserDetailResponseDto.toDto(user, null);
+        return UserDetailConfigResponseDto.toDto(user);
     }
 
     // id로 회원 정보 조회
     public UserDetailResponseDto getUserInfoById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
-        return UserDetailResponseDto.toDto(user, null);
+        return UserDetailResponseDto.toDto(user);
     }
 
     // 전체 회원 조회
@@ -46,10 +47,10 @@ public class UserService {
 
 
     // 회원 정보 수정
-    public Long modifyUser(String token, UserModifyRequestDto request) {
+    public UserDetailConfigResponseDto modifyUser(String token, UserModifyRequestDto request) {
         User user = findUserByToken(token);
-        user.update(request.getUsername(), request.getGender(), request.getAge());
-        return user.getId();
+        request.update(user, null);
+        return UserDetailConfigResponseDto.toDto(user);
     }
 
     // 거래용 랜덤 5명의 판매 정보 가져오기
