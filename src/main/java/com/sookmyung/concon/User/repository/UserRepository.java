@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsUserByEmail(String email);
 
+    List<User> findByUsernameContaining(String keyword);
+
     @Query("SELECT u FROM User u " +
             "JOIN u.orders o " +
             "WHERE o.id IS NOT NULL " +

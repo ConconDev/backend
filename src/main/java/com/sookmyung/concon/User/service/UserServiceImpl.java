@@ -47,6 +47,15 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserSimpleResponseDto> getUsersByKeyword(String keyword) {
+        return userRepository.findByUsernameContaining(keyword)
+                .stream()
+                .map(UserSimpleResponseDto::toDto)
+                .toList();
+    }
+
 
     // 회원 정보 수정
     @Override
