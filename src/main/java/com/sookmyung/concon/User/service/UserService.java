@@ -1,6 +1,5 @@
 package com.sookmyung.concon.User.service;
 
-import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
@@ -19,6 +18,8 @@ public interface UserService {
     UserDetailConfigResponseDto modifyUser(String token, UserModifyRequestDto request);
 
     List<UserDetailResponseDto> get5RandomUser();
+
+    List<UserDetailResponseDto> get5RandomUserByItemName(String itemName);
 
     void deleteUser(String token);
 }

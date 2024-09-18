@@ -6,6 +6,7 @@ import com.sookmyung.concon.User.Entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -27,7 +28,7 @@ public class UserDetailResponseDto {
                 .profileUrl(user.getProfileUrl())
                 .color(user.getColor())
                 .orders(orders)
-                .reviews(reviews)
+                .reviews(reviews == null? new ArrayList<>() : reviews)
                 .build();
     }
 }
