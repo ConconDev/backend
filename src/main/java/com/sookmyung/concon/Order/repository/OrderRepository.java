@@ -23,4 +23,6 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     List<Orders> findAllByItemAndStatus(@Param("item") Item item,
                                         @Param("status") OrderStatus status,
                                         Pageable pageable);
+
+    List<Orders> findTop2BySellerOrderByCreatedDateDesc(User seller);
 }

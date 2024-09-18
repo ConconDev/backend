@@ -16,7 +16,6 @@ public class UserSimpleResponseDto {
                 .userId(user.getId())
                 .name(user.getUsername())
                 .profileUrl(user.getProfileUrl())
-                .profileUrl(user.getProfileUrl())
                 .build();
     }
 }

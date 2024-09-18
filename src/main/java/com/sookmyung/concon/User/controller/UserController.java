@@ -4,7 +4,7 @@ import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
-import com.sookmyung.concon.User.service.UserService;
+import com.sookmyung.concon.User.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     // 나의 정보 조회
     @Operation(summary = "나의 정보 상세 조회")

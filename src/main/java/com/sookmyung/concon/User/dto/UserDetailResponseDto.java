@@ -2,7 +2,6 @@ package com.sookmyung.concon.User.dto;
 
 import com.sookmyung.concon.Order.dto.OrderSimpleResponseDto;
 import com.sookmyung.concon.Review.entity.Review;
-import com.sookmyung.concon.User.Entity.Gender;
 import com.sookmyung.concon.User.Entity.User;
 import lombok.Builder;
 import lombok.Getter;

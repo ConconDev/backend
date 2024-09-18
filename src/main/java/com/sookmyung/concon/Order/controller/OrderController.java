@@ -1,7 +1,7 @@
 package com.sookmyung.concon.Order.controller;
 
 import com.sookmyung.concon.Order.dto.*;
-import com.sookmyung.concon.Order.service.OrderService;
+import com.sookmyung.concon.Order.service.OrderServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
 
     // 판매 생성
     @Operation(summary = "판매(거래) 생성")
