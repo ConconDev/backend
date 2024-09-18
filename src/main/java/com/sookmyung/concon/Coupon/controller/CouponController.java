@@ -21,8 +21,9 @@ public class CouponController {
     @Operation(summary = "쿠폰 생성")
     @PostMapping
     public ResponseEntity<CouponDetailResponseDto> createCoupon(
+            @RequestHeader("Authorization") String token,
             @RequestBody CouponCreateRequestDto request) {
-        return ResponseEntity.ok(couponService.saveCoupon(request));
+        return ResponseEntity.ok(couponService.saveCoupon(token, request));
     }
 
     @Operation(summary = "나의 쿠폰 전체 조회")
