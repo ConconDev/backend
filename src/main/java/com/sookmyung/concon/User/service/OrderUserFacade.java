@@ -56,6 +56,7 @@ public class OrderUserFacade {
         return toOrderSimpleDtoList(orders);
     }
 
+    // 사용자의 최신 2개 거래 목록을 가져오기
     public List<OrderSimpleResponseDto> get2TopOrdersByUser(User user){
         List<Orders> top2BySellerOrderByCreatedDateDesc = orderRepository.findTop2BySellerOrderByCreatedDateDesc(user);
         return toOrderSimpleDtoList(top2BySellerOrderByCreatedDateDesc);

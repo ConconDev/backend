@@ -121,10 +121,4 @@ public class OrderServiceImpl implements OrderService{
         Orders order = findOrdersById(orderId);
         orderRepository.delete(order);
     }
-
-    // 사용자의 최신 2개 거래 목록을 가져오기
-    @Transactional(readOnly = true)
-    public List<OrderSimpleResponseDto> get2TopOrdersByUser(User user) {
-        return orderUserFacade.get2TopOrdersByUser(user);
-    }
 }

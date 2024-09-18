@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
                     orderUserFacade.get2TopOrdersByUser(user), null);
             response.add(dto);
         }
-
         return response;
     }
 
