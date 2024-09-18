@@ -50,14 +50,22 @@ public class OrderUserFacade {
                         UserIdResponseDto.toDto(order.getSeller()))).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<UserDetailResponseDto> toUserDetailResponseDtos(List<User> randomUsers) {
         List<UserDetailResponseDto> response = new ArrayList<>();
         for (User user : randomUsers) {
-            UserDetailResponseDto dto = UserDetailResponseDto.toDto(user,
-                    get2TopOrdersByUser(user), null);
+            UserDetailResponseDto dto = toUserDetailResponseDto(user.getId());
             response.add(dto);
         }
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetailResponseDto toUserDetailResponseDto(Long userId) {
+        User user = findUserById(userId);
+        List<Orders> top2BySellerOrderByCreatedDateDesc = orderRepository.findTop2BySellerOrderByCreatedDateDesc(user);
+        List<OrderSimpleResponseDto> top2OrderByUser = toOrderSimpleDtoList(top2BySellerOrderByCreatedDateDesc);
+        return UserDetailResponseDto.toDto(user, top2OrderByUser, null);
     }
 
     @Transactional(readOnly = true)
@@ -66,13 +74,6 @@ public class OrderUserFacade {
         Pageable pageable = PageRequest.of(page, size);
         List<Orders> orders = orderRepository.findBySeller(seller, pageable);
         return toOrderSimpleDtoList(orders);
-    }
-
-    // 사용자의 최신 2개 거래 목록을 가져오기
-    @Transactional(readOnly = true)
-    public List<OrderSimpleResponseDto> get2TopOrdersByUser(User user){
-        List<Orders> top2BySellerOrderByCreatedDateDesc = orderRepository.findTop2BySellerOrderByCreatedDateDesc(user);
-        return toOrderSimpleDtoList(top2BySellerOrderByCreatedDateDesc);
     }
 
     @Transactional(readOnly = true)
