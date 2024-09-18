@@ -49,6 +49,10 @@ public class User {
     @OneToMany(mappedBy = "seller")
     private List<Orders> orders;
 
+    public void updateVerifiedStatus(boolean verified) {
+        is_verified = verified;
+    }
+
 
     public void update(String username, String profileUrl, String color,
                        boolean gift_notify, boolean expiry_notify,
