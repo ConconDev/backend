@@ -43,6 +43,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers());
     }
 
+    @Operation(summary = "유저 이름 검색", description = "해당 키워드를 포함한 이름을 가진 유저 모두 반환")
+    @GetMapping("/search")
+    public ResponseEntity<List<UserSimpleResponseDto>> searchUsers(
+            @RequestParam("username") String username) {
+        return ResponseEntity.ok(userService.getUsersByKeyword(username));
+    }
+
     @Operation(summary = "랜덤 5명 유저 조회", description = "거래 내역 최대 2개, 리뷰 최대 2개")
     @GetMapping("/random")
     public ResponseEntity<List<UserDetailResponseDto>> getRandom5Users() {

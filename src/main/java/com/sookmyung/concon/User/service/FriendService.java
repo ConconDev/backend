@@ -19,19 +19,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FriendService {
-    private final UserRepository userRepository;
+    private final OrderUserFacade orderUserFacade;
     private final FriendshipRepository friendshipRepository;
-    private final JwtUtil jwtUtil;
-
-    public User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. "));
-    }
-
-    private User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다. "));
-    }
 
     private Friendship findFriendshipById(Long friendshipId) {
         return friendshipRepository.findById(friendshipId)
@@ -41,8 +30,8 @@ public class FriendService {
     // 친구 요청
     @Transactional
     public Long createFriendRequest(String token, Long friendId) {
-        User sender = findUserByToken(token);
-        User receiver = findUserById(friendId);
+        User sender = orderUserFacade.findUserByToken(token);
+        User receiver = orderUserFacade.findUserById(friendId);
         Friendship friendship = Friendship.builder()
                 .sender(sender)
                 .receiver(receiver)
@@ -56,7 +45,7 @@ public class FriendService {
     // TODO : 사진 수정
     @Transactional(readOnly = true)
     public List<FriendSimpleResponseDto> getSenderFriends(String token) {
-        User user = findUserByToken(token);
+        User user = orderUserFacade.findUserByToken(token);
         List<Friendship> friendships = friendshipRepository.findBySenderAndStatus(user, FriendshipStatus.WAITING);
         return friendships.stream().map(friendship -> {
             User receiver = friendship.getReceiver();
@@ -68,7 +57,7 @@ public class FriendService {
     // TODO : 사진 수정
     @Transactional(readOnly = true)
     public List<FriendSimpleResponseDto> getReceiverFriends(String token) {
-        User user = findUserByToken(token);
+        User user = orderUserFacade.findUserByToken(token);
         List<Friendship> friendships = friendshipRepository.findByReceiverAndStatus(user, FriendshipStatus.WAITING);
         return friendships.stream().map(friendship -> {
             User sender = friendship.getSender();
@@ -123,7 +112,7 @@ public class FriendService {
     // 친구 조회
     @Transactional(readOnly = true)
     public List<FriendSimpleResponseDto> getFriends(String token) {
-        User user = findUserByToken(token);
+        User user = orderUserFacade.findUserByToken(token);
         List<Friendship> friendships = friendshipRepository.findBySenderAndStatus(user, FriendshipStatus.ACCEPT);
         return friendships.stream().map(friendship -> {
             User friend = friendship.getReceiver();

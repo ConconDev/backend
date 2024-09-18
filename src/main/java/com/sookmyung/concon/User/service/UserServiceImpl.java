@@ -2,7 +2,6 @@ package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.Item.service.ItemService;
 import com.sookmyung.concon.User.Entity.User;
-import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
@@ -35,8 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDetailResponseDto getUserInfoById(Long userId) {
-        User user = orderUserFacade.findUserById(userId);
-        return UserDetailResponseDto.toDto(user, orderUserFacade.getOrdersByUserId(user.getId(), 5, 5), null);
+        return orderUserFacade.toUserDetailResponseDto(userId);
     }
 
     // 전체 회원 조회
@@ -44,6 +42,15 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserSimpleResponseDto> getUsers() {
         return userRepository.findAll()
+                .stream()
+                .map(UserSimpleResponseDto::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserSimpleResponseDto> getUsersByKeyword(String keyword) {
+        return userRepository.findByUsernameContaining(keyword)
                 .stream()
                 .map(UserSimpleResponseDto::toDto)
                 .toList();
@@ -62,7 +69,7 @@ public class UserServiceImpl implements UserService {
     // 거래용 랜덤 5명의 판매 정보 가져오기
     // TODO : review 추가하기
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<UserDetailResponseDto> get5RandomUser() {
         List<User> randomUsers = userRepository.findRandomUsers();
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
