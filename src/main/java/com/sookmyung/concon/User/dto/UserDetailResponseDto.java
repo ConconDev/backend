@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserDetailResponseDto {
-    private Long id;
+    private Long userId;
     private String username;
     private Gender gender;
     private int age;
@@ -16,7 +16,7 @@ public class UserDetailResponseDto {
 
     public static UserDetailResponseDto toDto(User user, String profileUrl) {
         return UserDetailResponseDto.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .username(user.getUsername())
                 .gender(user.getGender())
                 .age(user.getAge())

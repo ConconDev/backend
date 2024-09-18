@@ -27,4 +27,6 @@ public class ItemService {
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }
+
+    // Item 이름으로 조회
 }
