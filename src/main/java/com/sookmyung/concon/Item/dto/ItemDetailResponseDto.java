@@ -14,6 +14,7 @@ public class ItemDetailResponseDto {
     private String info;
     private String brand;
     private String imageUrl;
+    private String category;
 
     public static ItemDetailResponseDto toDto(Item item) {
         return ItemDetailResponseDto.builder()
@@ -24,6 +25,7 @@ public class ItemDetailResponseDto {
                 .info(item.getInfo())
                 .brand(item.getBrand())
                 .imageUrl(item.getImageUrl())
+                .category(item.getCategory())
                 .build();
     }
 }
