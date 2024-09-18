@@ -19,9 +19,9 @@ public class Item {
 
     private String name;
 
-    private Double price;
+    private double price;
 
-    private Integer kcal;
+    private int kcal;
 
     private String info;
 
