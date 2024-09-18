@@ -4,6 +4,7 @@ import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
+import com.sookmyung.concon.User.service.UserService;
 import com.sookmyung.concon.User.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     // 나의 정보 조회
     @Operation(summary = "나의 정보 상세 조회")
@@ -41,6 +42,12 @@ public class UserController {
     @GetMapping("/all")
     public ResponseEntity<List<UserSimpleResponseDto>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
+    }
+
+    @Operation(summary = "랜덤 5명 유저 조회", description = "거래 내역 최대 2개, 리뷰 최대 2개")
+    @GetMapping("/random")
+    public ResponseEntity<List<UserDetailResponseDto>> getRandom5Users() {
+        return ResponseEntity.ok(userService.get5RandomUser());
     }
 
     // 회원 정보 수정
