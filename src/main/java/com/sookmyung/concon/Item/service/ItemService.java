@@ -20,6 +20,12 @@ public class ItemService {
         return itemRepository.findById(id).orElse(null);
     }
 
+    // Item 이름으로 조회
+    public Item getItemByName(String name) {
+        return itemRepository.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 item을 찾을 수 없습니다. "));
+    }
+
     public Item saveItem(Item item) {
         return itemRepository.save(item);
     }
@@ -27,6 +33,4 @@ public class ItemService {
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }
-
-    // Item 이름으로 조회
 }

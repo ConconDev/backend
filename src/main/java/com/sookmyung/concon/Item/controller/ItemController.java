@@ -45,5 +45,10 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @Operation(summary = "이름으로 item 찾기")
+    @GetMapping
+    public ResponseEntity<Item> getItemByName(
+            @RequestParam("name") String name) {
+        return ResponseEntity.ok(itemService.getItemByName(name));
+    }
 }
