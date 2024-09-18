@@ -23,7 +23,6 @@ public class BootPayService {
 
     public HashMap<String, Object> certificate(String token, String receiptId) {
         User user = orderUserFacade.findUserByToken(token);
-        if (user.is_verified()) throw new RuntimeException("이미 인증되었습니다. ");
 
         Bootpay bootpay = new Bootpay(applicationId, privateKey);
 
