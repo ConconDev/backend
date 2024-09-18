@@ -93,6 +93,9 @@ public class BootPayService {
     // 본인 인증
     public void certificate(String token, String receiptId) {
         User user = orderUserFacade.findUserByToken(token);
+
+        Bootpay bootpay = new Bootpay(applicationId, privateKey);
+
         if (user.is_verified()) {
             System.out.println("이미 인증되었습니다. ");
             return;
@@ -101,6 +104,7 @@ public class BootPayService {
             getBootpayToken();
 
             HashMap<String, Object> res = bootpay.certificate(receiptId);
+
             if (res.get("error_code") == null) { //success
                 System.out.println("certificate success: " + res);
                 user.updateVerifiedStatus(true);
@@ -108,6 +112,7 @@ public class BootPayService {
                 System.out.println("certificate false: " + res);
                 throw new RuntimeException("인증 실패: " + res.get("message"));
             }
+            return res;
         } catch (Exception e) {
             throw new RuntimeException("인증 오류", e);
         }
