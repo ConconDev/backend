@@ -76,10 +76,12 @@ jobs:
             SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}
             SPRING_DATA_REDIS_HOST=${{ secrets.SPRING_DATA_REDIS_HOST }}
             SPRING_DATA_REDIS_PORT=${{ secrets.SPRING_DATA_REDIS_PORT }}
-            AMAZON_AWS_ACCESS_KEY=${{ secrets.AMAZON_AWS_ACCESS_KEY }}
-            AMAZON_AWS_SECRET_KEY=${{ secrets.AMAZON_AWS_SECRET_KEY }}
-            AMAZON_AWS_REGION=${{ secrets.AMAZON_AWS_REGION }}
-            ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}
+            AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+            AWS_REGION=${{ AWS_REGION }}
+            TASK_DEFINITION_FAMILY=${{ TASK_DEFINITION_FAMILY }}
+            IAM_ROLE_NAME=${{ IAM_ROLE_NAME }}
+            
+            
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
