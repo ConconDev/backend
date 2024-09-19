@@ -9,4 +9,9 @@ public class HealthCheckController {
     public String healthCheck() {
         return "pong";
     }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "pong";
+    }
 }
