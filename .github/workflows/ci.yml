@@ -77,8 +77,8 @@ jobs:
             SPRING_DATA_REDIS_HOST=${{ secrets.SPRING_DATA_REDIS_HOST }}
             SPRING_DATA_REDIS_PORT=${{ secrets.SPRING_DATA_REDIS_PORT }}
             AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
-            TASK_DEFINITION_FAMILY=${{ TASK_DEFINITION_FAMILY }}
-            IAM_ROLE_NAME=${{ IAM_ROLE_NAME }}
+            TASK_DEFINITION_FAMILY=${{ secrets.TASK_DEFINITION_FAMILY }}
+            IAM_ROLE_NAME=${{ secrets.IAM_ROLE_NAME }}
             
             
 
