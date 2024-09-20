@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// TODO : 사진
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class OrderServiceImpl implements OrderService{
         orderRepository.save(orders);
         return OrderDetailResponseDto.toDto(orders,
                 CouponSimpleResponseDto.toDto(coupon, false),
-                null, UserSimpleResponseDto.toDto(seller));
+                null, UserSimpleResponseDto.toDto(seller, ""));
     }
 
     // 거래 아이디로 단일 조회

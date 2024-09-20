@@ -13,7 +13,6 @@ public class AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     // 회원 가입
-    // TODO : 이미지 추가
     public Long join(UserCreateRequestDto request) {
         if (userRepository.existsUserByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이메일이 중복되었습니다. ");

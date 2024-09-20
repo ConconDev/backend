@@ -1,9 +1,6 @@
 package com.sookmyung.concon.User.service;
 
-import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
-import com.sookmyung.concon.User.dto.UserDetailResponseDto;
-import com.sookmyung.concon.User.dto.UserModifyRequestDto;
-import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
+import com.sookmyung.concon.User.dto.*;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ public interface UserService {
 
     List<UserSimpleResponseDto> getUsersByKeyword(String keyword);
 
-    UserDetailConfigResponseDto modifyUser(String token, UserModifyRequestDto request);
+    UserModifyResponseDto modifyUser(String token, UserModifyRequestDto request);
 
     List<UserDetailResponseDto> get5RandomUser();
 
