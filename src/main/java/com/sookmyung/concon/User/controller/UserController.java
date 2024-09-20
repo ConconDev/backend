@@ -1,9 +1,6 @@
 package com.sookmyung.concon.User.controller;
 
-import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
-import com.sookmyung.concon.User.dto.UserDetailResponseDto;
-import com.sookmyung.concon.User.dto.UserModifyRequestDto;
-import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
+import com.sookmyung.concon.User.dto.*;
 import com.sookmyung.concon.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,7 +63,7 @@ public class UserController {
     // 회원 정보 수정
     @Operation(summary = "회원 정보 수정")
     @PutMapping
-    public ResponseEntity<UserDetailConfigResponseDto> modifyUser(
+    public ResponseEntity<UserModifyResponseDto> modifyUser(
             @RequestHeader("Authorization") String token,
             @RequestBody UserModifyRequestDto request) {
         return ResponseEntity.ok(userService.modifyUser(token, request));

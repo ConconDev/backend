@@ -18,9 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+
+// TODO : 사진 조회
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +57,12 @@ public class TransactionService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
     }
 
+    // TODO : 사진
     private static OrderDetailResponseDto toOrderDetailDto(Orders order) {
         Coupon coupon = order.getCoupon();
         return OrderDetailResponseDto.toDto(order,
                 CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null)
-                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer()) : null, UserSimpleResponseDto.toDto(order.getSeller()));
+                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer(), "") : null, UserSimpleResponseDto.toDto(order.getSeller(), ""));
     }
 
     // 거래 요청
@@ -79,14 +81,14 @@ public class TransactionService {
         eventPublisher.publishEvent(sellerId, ORDER_REQUESTED, response);
         return OrderRequestResponseDto.toDto(orders, buyer);
     }
-
+    // TODO : 사진
     // 거래 요청 전체 조회
     @Transactional(readOnly = true)
     public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
         return orderRequestRedisRepository.findAllMembersById(orderId)
                 .stream()
                 .map(this::findUserById)
-                .map(UserSimpleResponseDto::toDto)
+                .map((user) -> UserSimpleResponseDto.toDto(user, ""))
                 .toList();
     }
 

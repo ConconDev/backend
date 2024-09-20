@@ -8,6 +8,7 @@ import com.sookmyung.concon.Order.dto.OrderSimpleResponseDto;
 import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Order.repository.OrderRepository;
 import com.sookmyung.concon.Order.service.OrderService;
+import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserDetailResponseDto;
@@ -29,16 +30,18 @@ public class OrderUserFacade {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final JwtUtil jwtUtil;
+    private final PhotoManager photoManager;
 
     /*
     dto 변환 메소드 추출
      */
     // OrderDetailResponseDto 변환 메소드
+    // TODO : 사진
     public OrderDetailResponseDto toOrderDetailDto(Orders order) {
         Coupon coupon = order.getCoupon();
         return OrderDetailResponseDto.toDto(order,
                 CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null)
-                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer()) : null, UserSimpleResponseDto.toDto(order.getSeller()));
+                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer(), "") : null, UserSimpleResponseDto.toDto(order.getSeller(), ""));
     }
 
     // List<OrderSimpleResponseDto> 변환 메소드
@@ -65,7 +68,8 @@ public class OrderUserFacade {
         User user = findUserById(userId);
         List<Orders> top2BySellerOrderByCreatedDateDesc = orderRepository.findTop2BySellerOrderByCreatedDateDesc(user);
         List<OrderSimpleResponseDto> top2OrderByUser = toOrderSimpleDtoList(top2BySellerOrderByCreatedDateDesc);
-        return UserDetailResponseDto.toDto(user, top2OrderByUser, null);
+        String photoUrl = photoManager.getPhoto("user:" + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
+        return UserDetailResponseDto.toDto(user, top2OrderByUser, null, photoUrl);
     }
 
     @Transactional(readOnly = true)

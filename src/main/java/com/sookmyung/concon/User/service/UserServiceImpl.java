@@ -1,32 +1,42 @@
 package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.Item.service.ItemService;
+import com.sookmyung.concon.Photo.service.PhotoManager;
+import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
-import com.sookmyung.concon.User.dto.UserDetailConfigResponseDto;
-import com.sookmyung.concon.User.dto.UserDetailResponseDto;
-import com.sookmyung.concon.User.dto.UserModifyRequestDto;
-import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
+import com.sookmyung.concon.User.dto.*;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+// TODO : 사진 조회 수정
+// tODO : paging 처리
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final OrderUserFacade orderUserFacade;
     private final UserRepository userRepository;
     private final ItemService itemService;
+    private final PhotoManager photoManager;
 
     // 나의 정보 조회
-    // TODO : 프로필 사진 수정
     @Override
     @Transactional(readOnly = true)
     public UserDetailConfigResponseDto getUserInfo(String token) {
         User user = orderUserFacade.findUserByToken(token);
-        return UserDetailConfigResponseDto.toDto(user);
+        return UserDetailConfigResponseDto.toDto(user, getUserPhoto(user));
+    }
+
+    private String getUserPhoto(User user) {
+        return photoManager.getPhoto(makePrefix(user), user.getProfilePhotoName(), user.getProfileCreatedDate());
+    }
+
+    private String makePrefix(User user) {
+        return "user:" + user.getId();
     }
 
     // id로 회원 정보 조회
@@ -43,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public List<UserSimpleResponseDto> getUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(UserSimpleResponseDto::toDto)
+                .map((user) -> UserSimpleResponseDto.toDto(user, getUserPhoto(user)))
                 .toList();
     }
 
@@ -52,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public List<UserSimpleResponseDto> getUsersByKeyword(String keyword) {
         return userRepository.findByUsernameContaining(keyword)
                 .stream()
-                .map(UserSimpleResponseDto::toDto)
+                .map((user) -> UserSimpleResponseDto.toDto(user, getUserPhoto(user)))
                 .toList();
     }
 
@@ -60,10 +70,21 @@ public class UserServiceImpl implements UserService {
     // 회원 정보 수정
     @Override
     @Transactional
-    public UserDetailConfigResponseDto modifyUser(String token, UserModifyRequestDto request) {
+    public UserModifyResponseDto modifyUser(String token, UserModifyRequestDto request) {
         User user = orderUserFacade.findUserByToken(token);
-        request.update(user, null);
-        return UserDetailConfigResponseDto.toDto(user);
+        user.update(request);
+        String photoModifyUrl = "";
+        if (request.getFileName() != null && !request.getFileName().isEmpty()) {
+            String fileName = request.getFileName();
+            // TODO : modify
+            LocalDateTime now = LocalDateTime.now();
+            photoModifyUrl = photoManager.updatePhoto(makePrefix(user),
+                            user.getProfilePhotoName(), user.getProfileCreatedDate(),
+                            fileName, now);
+            user.updatePhoto(fileName, now);
+        }
+        // TODO : 사진 수정
+        return UserModifyResponseDto.toDto(UserDetailConfigResponseDto.toDto(user, "로직 추가 예정"), photoModifyUrl);
     }
 
     // 거래용 랜덤 5명의 판매 정보 가져오기
@@ -74,8 +95,6 @@ public class UserServiceImpl implements UserService {
         List<User> randomUsers = userRepository.findRandomUsers();
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
     }
-
-
 
     // 아이템 이름으로 랜덤 5명의 판매 정보 가져오기
     @Override
