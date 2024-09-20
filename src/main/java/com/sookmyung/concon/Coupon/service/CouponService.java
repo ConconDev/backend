@@ -45,7 +45,16 @@ public class CouponService {
     public CouponDetailResponseDto saveCoupon(String token, CouponCreateRequestDto request) {
 
         User user = findUserByToken(token);
-        Item item = findItemById(request.getItemId());
+
+        // Item 객체를 생성하고 저장 (itemId는 자동 생성됨)
+        Item item = Item.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .build();
+
+        itemRepository.save(item); // 저장 후 itemId가 자동으로 생성됨
+
+        // 자동 생성된 itemId를 사용해 쿠폰 생성
         Coupon coupon = request.toEntity(user, item);
 
         couponRepository.save(coupon);

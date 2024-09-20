@@ -49,5 +49,4 @@ public class Coupon {
     public void changeUser(User user) {
         this.user = user;
     }
-
 }
