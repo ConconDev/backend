@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-    public class ItemSimpleResponseDto {
+public class ItemSimpleResponseDto {
     private Long itemId;
     private String name;
     private String brand;
