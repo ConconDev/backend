@@ -1,6 +1,7 @@
 package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.Item.service.ItemService;
+import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ItemService itemService;
     private final PhotoManager photoManager;
+    private final PhotoFacade photoFacade;
 
     // 나의 정보 조회
     @Override
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getUserPhoto(User user) {
-        return photoManager.getPhoto(makePrefix(user), user.getProfilePhotoName(), user.getProfileCreatedDate());
+        return photoFacade.getUserPhotoUrl(user);
     }
 
     private String makePrefix(User user) {

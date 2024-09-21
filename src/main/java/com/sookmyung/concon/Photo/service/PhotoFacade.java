@@ -25,8 +25,8 @@ public class PhotoFacade {
         return photoManager.postPhoto(USER_PREFIX + user.getId(), imageFileName, now);
     }
 
-    public String uploadItemPhoto(Item item, String imageFileName) {
-        return photoService.createPhoto(ITEM_PREFIX + item.getId() + "/" + imageFileName);
+    public String uploadItemVideo(Item item, String imageFileName, LocalDateTime now) {
+        return photoManager.postPhoto(ITEM_PREFIX + item.getId(), imageFileName, now);
     }
 
     public String uploadCouponPhoto(Coupon coupon, String imageFileName, LocalDateTime now) {
@@ -45,7 +45,11 @@ public class PhotoFacade {
         return photoManager.getPhoto(USER_PREFIX + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
     }
     public String getItemPhotoUrl(Item item) {
-        return photoService.getPhoto(ITEM_PREFIX + item.getId() + item.getImagePath());
+//        return photoService.getPhoto(ITEM_PREFIX + item.getId() + item.getImagePath());
+        return item.getImageUrl();
+    }
+    public String getItemVideoUrl(Item item) {
+        return photoManager.getPhoto(ITEM_PREFIX + item.getId(), item.getVideoName(), item.getVideoCreatedDate());
     }
 
     public String getCouponPhotoUrl(Coupon coupon) {

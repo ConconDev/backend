@@ -30,9 +30,13 @@ public class Item {
 
     private String category;
 
-    private String imagePath;
+    private String imageUrl;
 
-    public void uploadImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    private String videoName;
+    private LocalDateTime videoCreatedDate;
+
+    public void updateVideo(String videoName, LocalDateTime videoCreatedDate) {
+        this.videoName = videoName;
+        this.videoCreatedDate = videoCreatedDate;
     }
 }

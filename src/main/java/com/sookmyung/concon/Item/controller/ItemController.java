@@ -41,12 +41,12 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemByName(name));
     }
 
-    @Operation(summary = "item 생성")
-    @PostMapping
-    public ResponseEntity<ItemCreateResponseDto> addItem(
-            @RequestBody ItemCreateDto request) {
-        return ResponseEntity.ok(itemService.saveItem(request));
-    }
+//    @Operation(summary = "item 생성")
+//    @PostMapping
+//    public ResponseEntity<ItemCreateResponseDto> addItem(
+//            @RequestBody ItemCreateDto request) {
+//        return ResponseEntity.ok(itemService.saveItem(request));
+//    }
 
     @Operation(summary = "id로 item 삭제")
     @DeleteMapping("/{item_id}")

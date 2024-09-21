@@ -48,15 +48,26 @@ public class ItemService {
     }
 
     // 아이템 저장 (test 용)
+//    @Transactional
+//    public ItemCreateResponseDto saveItem(ItemCreateDto request) {
+//
+//        Item item = request.toEntity();
+//        itemRepository.save(item);
+//        String createUrl = photoFacade.uploadItemPhoto(item, request.getImageName());
+//        item.uploadImagePath(createUrl);
+//
+//        return ItemCreateResponseDto.toDto(item, createUrl);
+//    }
+
+    // 동영상 저장
     @Transactional
-    public ItemCreateResponseDto saveItem(ItemCreateDto request) {
+    public String updateVideoUrl(Long itemId, String videoName) {
+        Item item = itemFacade.findItemById(itemId);
+        LocalDateTime now = LocalDateTime.now();
 
-        Item item = request.toEntity();
-        itemRepository.save(item);
-        String createUrl = photoFacade.uploadItemPhoto(item, request.getImageName());
-        item.uploadImagePath(createUrl);
+        item.updateVideo(videoName, now);
 
-        return ItemCreateResponseDto.toDto(item, createUrl);
+        return photoFacade.uploadItemVideo(item, videoName, now);
     }
 
     // 아이템 삭제 (test 용)

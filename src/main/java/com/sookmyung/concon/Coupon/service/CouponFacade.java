@@ -1,6 +1,7 @@
 package com.sookmyung.concon.Coupon.service;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
+import com.sookmyung.concon.Coupon.dto.CouponCreateResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
 import com.sookmyung.concon.Coupon.repository.CouponRepository;
@@ -11,6 +12,8 @@ import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,16 @@ public class CouponFacade {
         boolean isUsed = coupon.getUsedDate() != null;
 
         return CouponSimpleResponseDto.toDto(coupon, itemDto, isUsed);
+    }
+
+    public CouponCreateResponseDto toCreateDto(Coupon coupon, LocalDateTime now) {
+        Item item = coupon.getItem();
+        ItemSimpleResponseDto itemDto = ItemSimpleResponseDto.toDto(item, photoFacade.getItemPhotoUrl(item));
+
+        String barcodeImageUrl = photoFacade.uploadCouponBarcodePhoto(coupon, coupon.getBarcodeImageFileName(), now);
+        String couponImageUrl = photoFacade.uploadCouponPhoto(coupon, coupon.getImageFileName(), now);
+
+        return CouponCreateResponseDto.toDto(coupon, itemDto, barcodeImageUrl, couponImageUrl);
     }
 
     public Coupon findByCouponId(Long couponId) {

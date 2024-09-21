@@ -2,6 +2,7 @@ package com.sookmyung.concon.Coupon.service;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Coupon.dto.CouponCreateRequestDto;
+import com.sookmyung.concon.Coupon.dto.CouponCreateResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
 import com.sookmyung.concon.Coupon.repository.CouponRepository;
@@ -33,9 +34,10 @@ public class CouponService {
     private final CouponFacade couponFacade;
 
 
+    // 쿠폰 생성
     @Transactional
-    public CouponDetailResponseDto saveCoupon(String token, CouponCreateRequestDto request) {
-
+    public CouponCreateResponseDto saveCoupon(String token,
+                                              CouponCreateRequestDto request) {
         User user = orderUserFacade.findUserByToken(token);
         Item item = itemFacade.findItemById(request.getItemId());
 
@@ -43,7 +45,7 @@ public class CouponService {
         Coupon coupon = request.toEntity(user, item, now);
         couponRepository.save(coupon);
 
-        return couponFacade.toDetailDto(coupon, user, item);
+        return couponFacade.toCreateDto(coupon, now);
     }
 
     // 나의 모든 쿠폰 조회
