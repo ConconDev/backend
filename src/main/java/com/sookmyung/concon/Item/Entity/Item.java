@@ -5,12 +5,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "item")
-@Getter
+@Getter @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
 
     @Id
@@ -21,13 +24,15 @@ public class Item {
 
     private double price;
 
-    private int kcal;
-
-    private String info;
+    private String description;
 
     private String brand;
 
     private String category;
 
-    private String imageUrl;
+    private String imagePath;
+
+    public void uploadImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

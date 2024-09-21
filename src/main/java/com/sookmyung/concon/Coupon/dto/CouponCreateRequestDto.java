@@ -2,31 +2,37 @@ package com.sookmyung.concon.Coupon.dto;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Item.Entity.Item;
+import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import com.sookmyung.concon.User.Entity.User;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class CouponCreateRequestDto {
     private Long itemId;
     private String barcode;
-    private String barcodeImage;
+    private String barcodeImageName;
     private String imageFileName;
-    private String name;
     private Double price;
     private LocalDate expirationDate; // 'yyyy-MM-dd' 형식
+    private String category;
 
-    public Coupon toEntity(User user, Item item) {
+    public Coupon toEntity(User user, Item item, LocalDateTime now) {
         return Coupon.builder()
                 .user(user)
                 .item(item)
                 .barcode(barcode)
-                .barcodeImageFileName(barcodeImage)
-                .imageUrl(imageFileName)
-                .name(name)
-                .price(price)
+                .barcodeImageFileName(barcodeImageName)
+                .barcodeImageCreatedDate(now)
+                .itemImagePath(item.getImagePath())
+                .imageFileName(imageFileName)
+                .imageCreateDate(now)
+                .itemPrice(item.getPrice())
+                .remainingPrice(price)
                 .expirationDate(expirationDate)
+                .category(category)
                 .buyFlag(false)
                 .build();
     }

@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO : 사진 조회 수정
 // tODO : paging 처리
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final String PREFIX = "user:";
     private final OrderUserFacade orderUserFacade;
     private final UserRepository userRepository;
     private final ItemService itemService;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String makePrefix(User user) {
-        return "user:" + user.getId();
+        return PREFIX + user.getId();
     }
 
     // id로 회원 정보 조회

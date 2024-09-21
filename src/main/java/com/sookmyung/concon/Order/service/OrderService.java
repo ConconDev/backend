@@ -24,7 +24,5 @@ public interface OrderService {
 
     List<OrderSimpleResponseDto> getAllOrdersByItemId(Long itemId, int page, int size);
 
-    OrderDetailResponseDto modifyOrder(OrderModifyRequestDto request);
-
     void deleteOrder(Long orderId);
 }
