@@ -10,21 +10,21 @@ public class ItemDetailResponseDto {
     private Long itemId;
     private String name;
     private double price;
-    private int kcal;
-    private String info;
+    private String description;
     private String brand;
     private String imageUrl;
+    private String videoUrl;
     private String category;
 
-    public static ItemDetailResponseDto toDto(Item item) {
+    public static ItemDetailResponseDto toDto(Item item, String imageUrl, String videoUrl) {
         return ItemDetailResponseDto.builder()
                 .itemId(item.getId())
                 .name(item.getName())
                 .price(item.getPrice())
-                .kcal(item.getKcal())
-                .info(item.getInfo())
+                .description(item.getDescription())
                 .brand(item.getBrand())
-                .imageUrl(item.getImageUrl())
+                .imageUrl(imageUrl)
+                .videoUrl(videoUrl)
                 .category(item.getCategory())
                 .build();
     }

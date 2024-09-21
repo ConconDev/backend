@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -25,23 +26,17 @@ public class Orders {
 
     // 아이템 이미지
     // 자주 조회되므로 필드로 저장
-    private String imageUrl;
+    private String itemPhotoPath;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     private User buyer;
-
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
-    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    private String title;
-    private String content;
-    private double price;
     private LocalDate createdDate;
 
     @Setter
@@ -58,9 +53,9 @@ public class Orders {
         this.status = status;
     }
 
-    public void update(String title, String content, double price) {
-        this.title = title;
-        this.content = content;
-        this.price = price;
-    }
+//    public void update(String title, String content, double price) {
+//        this.title = title;
+//        this.content = content;
+//        this.price = price;
+//    }
 }

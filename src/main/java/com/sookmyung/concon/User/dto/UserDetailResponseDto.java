@@ -22,12 +22,12 @@ public class UserDetailResponseDto {
     //TODO : 리뷰 추가
     private List<Review> reviews;
 
-    public static UserDetailResponseDto toDto(User user, List<OrderSimpleResponseDto> orders, List<Review> reviews) {
+    public static UserDetailResponseDto toDto(User user, List<OrderSimpleResponseDto> orders, List<Review> reviews, String profileUrl) {
         log.debug("Reviews in toDto: {}", reviews);
         return UserDetailResponseDto.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
-                .profileUrl(user.getProfileUrl())
+                .profileUrl(profileUrl)
                 .color(user.getColor())
                 .orders(orders)
                 .reviews(reviews)

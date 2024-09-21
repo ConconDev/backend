@@ -1,12 +1,15 @@
 package com.sookmyung.concon.User.Entity;
 
 import com.sookmyung.concon.Order.entity.Orders;
+import com.sookmyung.concon.Photo.dto.PhotoDto;
+import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -30,7 +33,9 @@ public class User {
     private String password;
 
     // 프로필 사진
-    private String profileUrl;
+    private String profilePhotoName;
+    private LocalDateTime profileCreatedDate;
+
     private String color;
 
     // 알람 여부
@@ -49,16 +54,17 @@ public class User {
     @OneToMany(mappedBy = "seller")
     private List<Orders> orders;
 
+    public void update(UserModifyRequestDto request) {
+        this.username = request.getUsername();
+        this.color = request.getColor();
+        this.gift_notify = request.isGift_notify();
+        this.expiry_notify = request.isExpiry_notify();
+        this.expiry_days = request.getExpiry_days();
+        this.is_verified = request.is_verified();
+    }
 
-    public void update(String username, String profileUrl, String color,
-                       boolean gift_notify, boolean expiry_notify,
-                       int expiry_days, boolean is_verified) {
-        this.username = username;
-        this.profileUrl = profileUrl;
-        this.color = color;
-        this.gift_notify = gift_notify;
-        this.expiry_notify = expiry_notify;
-        this.expiry_days = expiry_days;
-        this.is_verified = is_verified;
+    public void updatePhoto(String fileName, LocalDateTime time) {
+        this.profilePhotoName = fileName;
+        this.profileCreatedDate = time;
     }
 }

@@ -1,6 +1,7 @@
 package com.sookmyung.concon.Coupon.controller;
 
 import com.sookmyung.concon.Coupon.dto.CouponCreateRequestDto;
+import com.sookmyung.concon.Coupon.dto.CouponCreateResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
 import com.sookmyung.concon.Coupon.service.CouponService;
@@ -41,4 +42,11 @@ public class CouponController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "coupon id로 상세조회")
+    @GetMapping("/{coupon-id}")
+    public ResponseEntity<CouponDetailResponseDto> getCouponDetail(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("coupon-id") Long couponId) {
+        return ResponseEntity.ok(couponService.getCouponDetail(token, couponId));
+    }
 }

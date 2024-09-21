@@ -1,5 +1,6 @@
 package com.sookmyung.concon.User.service;
 
+import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.User.Entity.Friendship;
 import com.sookmyung.concon.User.Entity.FriendshipStatus;
 import com.sookmyung.concon.User.Entity.User;
@@ -22,9 +23,20 @@ public class FriendService {
     private final OrderUserFacade orderUserFacade;
     private final FriendshipRepository friendshipRepository;
 
+    private static final String PREFIX = "user:";
+    private final PhotoManager photoManager;
+
     private Friendship findFriendshipById(Long friendshipId) {
         return friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 요청을 조회할 수 없습니다. "));
+    }
+
+    private String getUserPhoto(User user) {
+        return photoManager.getPhoto(makePrefix(user), user.getProfilePhotoName(), user.getProfileCreatedDate());
+    }
+
+    private String makePrefix(User user) {
+        return PREFIX + user.getId();
     }
 
     // 친구 요청
@@ -42,26 +54,24 @@ public class FriendService {
     }
 
     // 친구 요청 조회(보낸 쪽)
-    // TODO : 사진 수정
     @Transactional(readOnly = true)
     public List<FriendSimpleResponseDto> getSenderFriends(String token) {
         User user = orderUserFacade.findUserByToken(token);
         List<Friendship> friendships = friendshipRepository.findBySenderAndStatus(user, FriendshipStatus.WAITING);
         return friendships.stream().map(friendship -> {
             User receiver = friendship.getReceiver();
-            return FriendSimpleResponseDto.toDto(receiver, null, friendship);
+            return FriendSimpleResponseDto.toDto(receiver, getUserPhoto(receiver), friendship);
         }).toList();
     }
 
     // 친구 요청 조회(받는 쪽)
-    // TODO : 사진 수정
     @Transactional(readOnly = true)
     public List<FriendSimpleResponseDto> getReceiverFriends(String token) {
         User user = orderUserFacade.findUserByToken(token);
         List<Friendship> friendships = friendshipRepository.findByReceiverAndStatus(user, FriendshipStatus.WAITING);
         return friendships.stream().map(friendship -> {
             User sender = friendship.getSender();
-            return FriendSimpleResponseDto.toDto(sender, null, friendship);
+            return FriendSimpleResponseDto.toDto(sender, getUserPhoto(user), friendship);
         }).toList();
     }
 
@@ -80,7 +90,8 @@ public class FriendService {
             throw new IllegalArgumentException("요청 대기 상태가 아닙니다. ");
         }
         friendship.updateStatus(FriendshipStatus.DENIED);
-        return FriendSimpleResponseDto.toDto(friendship.getSender(), null, friendship);
+        User sender = friendship.getSender();
+        return FriendSimpleResponseDto.toDto(sender, getUserPhoto(sender), friendship);
     }
 
 
@@ -116,7 +127,7 @@ public class FriendService {
         List<Friendship> friendships = friendshipRepository.findBySenderAndStatus(user, FriendshipStatus.ACCEPT);
         return friendships.stream().map(friendship -> {
             User friend = friendship.getReceiver();
-            return FriendSimpleResponseDto.toDto(friend, null, friendship);
+            return FriendSimpleResponseDto.toDto(friend, getUserPhoto(friend), friendship);
         }).toList();
     }
 

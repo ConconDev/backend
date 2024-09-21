@@ -1,8 +1,7 @@
 package com.sookmyung.concon.Item.controller;
 
 import com.sookmyung.concon.Item.Entity.Item;
-import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
-import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
+import com.sookmyung.concon.Item.dto.*;
 import com.sookmyung.concon.Item.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,19 +31,26 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(itemId));
     }
 
-    @Operation(summary = "이름으로 item 찾기")
+    @Operation(summary = "이름으로 item 조회")
     @GetMapping
     public ResponseEntity<ItemDetailResponseDto> getItemByName(
             @RequestParam("name") String name) {
         return ResponseEntity.ok(itemService.getItemByName(name));
     }
 
-    @Operation(summary = "item 생성")
-    @PostMapping
-    public ResponseEntity<ItemDetailResponseDto> addItem(
-            @RequestBody Item item) {
-        return ResponseEntity.ok(itemService.saveItem(item));
+    @Operation(summary = "이름 키워드로 item 검색")
+    @GetMapping("/search")
+    public ResponseEntity<List<ItemSimpleResponseDto>> searchItem(
+            @RequestParam("name") String name) {
+        return ResponseEntity.ok(itemService.getItemsByKeyword(name));
     }
+
+//    @Operation(summary = "item 생성")
+//    @PostMapping
+//    public ResponseEntity<ItemCreateResponseDto> addItem(
+//            @RequestBody ItemCreateDto request) {
+//        return ResponseEntity.ok(itemService.saveItem(request));
+//    }
 
     @Operation(summary = "id로 item 삭제")
     @DeleteMapping("/{item_id}")
@@ -52,5 +58,12 @@ public class ItemController {
             @PathVariable("item_id") Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "item video 추가")
+    @PostMapping("/video")
+    public ResponseEntity<ItemVideoCreateResponseDto> createItemVideo(
+            @RequestBody ItemVideoCreateRequestDto request) {
+        return ResponseEntity.ok(itemService.updateVideoUrl(request));
     }
 }

@@ -1,6 +1,8 @@
 package com.sookmyung.concon.Coupon.dto;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
+import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
+import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,32 +12,37 @@ import java.time.LocalDate;
 @Getter
 public class CouponDetailResponseDto {
 
-    private Long id;
-    private Long userId;
-    private Long itemId;
+    private Long couponId;
+    private UserSimpleResponseDto user;
+    private ItemSimpleResponseDto item;
+
     private String barcode;
-
-    private String imageUrl;
     private String barcodeImageUrl;
+    private String itemImageUrl;
+    private String couponImageUrl;
 
-    private String name;
     private Double price;
     private LocalDate expirationDate;
     private LocalDate usedDate;
+    private String category;
     private Boolean buyFlag;
 
-    public static CouponDetailResponseDto toDto(Coupon coupon, String imageUrl, String barcodeImageUrl) {
+    // TODO : Exception 처리
+    public static CouponDetailResponseDto toDto(Coupon coupon, UserSimpleResponseDto user,
+                                                ItemSimpleResponseDto item, String barcodeImageUrl,
+                                                String couponImageUrl) {
         return CouponDetailResponseDto.builder()
-                .id(coupon.getId())
-                .userId(coupon.getUser().getId())
-                .itemId(coupon.getItem().getId())
+                .couponId(coupon.getId())
+                .user(user)
+                .item(item)
                 .barcode(coupon.getBarcode())
-                .imageUrl(imageUrl)
                 .barcodeImageUrl(barcodeImageUrl)
-                .name(coupon.getName())
-                .price(coupon.getPrice())
+                .itemImageUrl(item.getImageUrl())
+                .couponImageUrl(couponImageUrl)
+                .price(coupon.getRemainingPrice())
                 .expirationDate(coupon.getExpirationDate())
                 .usedDate(coupon.getUsedDate())
+                .category(coupon.getCategory())
                 .buyFlag(coupon.isBuyFlag())
                 .build();
     }

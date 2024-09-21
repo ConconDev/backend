@@ -11,11 +11,11 @@ public class UserSimpleResponseDto {
     private String name;
     private String profileUrl;
 
-    public static UserSimpleResponseDto toDto(User user) {
+    public static UserSimpleResponseDto toDto(User user, String profileUrl) {
         return UserSimpleResponseDto.builder()
                 .userId(user.getId())
                 .name(user.getUsername())
-                .profileUrl(user.getProfileUrl())
+                .profileUrl(profileUrl)
                 .build();
     }
 }
