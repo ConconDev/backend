@@ -2,6 +2,8 @@ package com.sookmyung.concon.Review.controller;
 
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.service.ItemService;
+import com.sookmyung.concon.Review.dto.ReviewRequest;
+import com.sookmyung.concon.Review.dto.ReviewUpdateRequest;
 import com.sookmyung.concon.Review.entity.Review;
 import com.sookmyung.concon.Review.service.ReviewService;
 import com.sookmyung.concon.User.Entity.User;
@@ -23,15 +25,15 @@ public class ReviewController {
 
     @Operation(summary = "후기 작성")
     @PostMapping
-    public ResponseEntity<Void> createReview(@RequestBody Map<String, Object> requestBody) {
-        Long userId = ((Number) requestBody.get("userId")).longValue();
-        Long itemId = ((Number) requestBody.get("itemId")).longValue();
-        double score = (double) requestBody.get("score");
-        String content = (String) requestBody.get("content");
+    public ResponseEntity<Void> createReview(@RequestBody ReviewRequest reviewRequest) {
+        Long userId = reviewRequest.getUserId();
+        Long itemId = reviewRequest.getItemId();
+        double score = reviewRequest.getScore();
+        String content = reviewRequest.getContent();
 
         Review review = Review.builder()
-                .userId(userId) // User ID만 저장
-                .itemId(itemId) // Item ID만 저장
+                .userId(userId)
+                .itemId(itemId)
                 .score(score)
                 .content(content)
                 .build();
@@ -39,7 +41,6 @@ public class ReviewController {
         reviewService.createReview(review);
         return ResponseEntity.ok().build();
     }
-
 
     @Operation(summary = "상품 별 후기 조회")
     @GetMapping("/item/{itemId}")
@@ -64,7 +65,14 @@ public class ReviewController {
 
     @Operation(summary = "후기 수정")
     @PutMapping("/{reviewId}")
-    public ResponseEntity<Void> updateReview(@PathVariable Long reviewId, @RequestBody Review updatedReview) {
+    public ResponseEntity<Void> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest updateRequest) {
+        double score = updateRequest.getScore();
+        String content = updateRequest.getContent();
+
+        Review updatedReview = new Review();
+        updatedReview.setScore(score);
+        updatedReview.setContent(content);
+
         reviewService.updateReview(reviewId, updatedReview);
         return ResponseEntity.ok().build();
     }

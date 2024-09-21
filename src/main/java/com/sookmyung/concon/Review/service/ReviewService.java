@@ -62,6 +62,7 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
+
     // 후기 삭제
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
