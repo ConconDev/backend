@@ -4,7 +4,7 @@ import com.sookmyung.concon.Item.Entity.Item;
 import lombok.Getter;
 
 @Getter
-public class ItemCreateDto {
+public class ItemCreateRequestDto {
     private String name;
     private String description;
     private double price;

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 public class CouponDetailResponseDto {
 
-    private Long id;
+    private Long couponId;
     private UserSimpleResponseDto user;
     private ItemSimpleResponseDto item;
 
@@ -32,7 +32,7 @@ public class CouponDetailResponseDto {
                                                 ItemSimpleResponseDto item, String barcodeImageUrl,
                                                 String couponImageUrl) {
         return CouponDetailResponseDto.builder()
-                .id(coupon.getId())
+                .couponId(coupon.getId())
                 .user(user)
                 .item(item)
                 .barcode(coupon.getBarcode())

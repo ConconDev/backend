@@ -7,11 +7,11 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserIdResponseDto {
-    private Long id;
+    private Long userId;
     private String username;
     public static UserIdResponseDto toDto(User user) {
         return UserIdResponseDto.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .username(user.getUsername())
                 .build();
     }

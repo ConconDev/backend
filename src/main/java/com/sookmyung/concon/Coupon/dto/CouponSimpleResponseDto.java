@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class CouponSimpleResponseDto {
+    private Long couponId;
     private ItemSimpleResponseDto item;
     private LocalDate expirationDate;
     private Double price;
@@ -19,6 +20,7 @@ public class CouponSimpleResponseDto {
 
     public static CouponSimpleResponseDto toDto(Coupon coupon, ItemSimpleResponseDto item, boolean isUsed) {
         return CouponSimpleResponseDto.builder()
+                .couponId(coupon.getId())
                 .item(item)
                 .expirationDate(coupon.getExpirationDate())
                 .category(coupon.getCategory())
