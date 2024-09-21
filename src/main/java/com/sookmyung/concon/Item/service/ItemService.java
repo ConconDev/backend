@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -60,7 +61,7 @@ public class ItemService {
     @Transactional
     public ItemVideoCreateResponseDto updateVideoUrl(ItemVideoCreateRequestDto request) {
         Item item = itemFacade.findItemById(request.getItemId());
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
         item.updateVideo(request.getVideoName(), now);
 

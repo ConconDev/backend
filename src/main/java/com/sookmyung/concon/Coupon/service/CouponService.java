@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class CouponService {
         User user = orderUserFacade.findUserByToken(token);
         Item item = itemFacade.findItemById(request.getItemId());
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         Coupon coupon = request.toEntity(user, item, now);
         couponRepository.save(coupon);
 
