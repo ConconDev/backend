@@ -3,7 +3,6 @@ package com.sookmyung.concon.User.service;
 import com.sookmyung.concon.Item.service.ItemService;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
-import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.*;
 import com.sookmyung.concon.User.repository.UserRepository;
@@ -12,13 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 // tODO : paging 처리
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final String PREFIX = "user:";
+    private static final String PREFIX = "user/";
     private final OrderUserFacade orderUserFacade;
     private final UserRepository userRepository;
     private final ItemService itemService;
@@ -79,7 +80,8 @@ public class UserServiceImpl implements UserService {
         if (request.getFileName() != null && !request.getFileName().isEmpty()) {
             String fileName = request.getFileName();
             // TODO : modify
-            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
             photoModifyUrl = photoManager.updatePhoto(makePrefix(user),
                             user.getProfilePhotoName(), user.getProfileCreatedDate(),
                             fileName, now);
