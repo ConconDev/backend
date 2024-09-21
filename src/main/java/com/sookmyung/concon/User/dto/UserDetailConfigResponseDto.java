@@ -16,11 +16,11 @@ public class UserDetailConfigResponseDto {
     private int expiry_days;
     private boolean is_verified;
 
-    public static UserDetailConfigResponseDto toDto(User user) {
+    public static UserDetailConfigResponseDto toDto(User user, String profileUrl) {
         return UserDetailConfigResponseDto.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
-                .profileUrl(user.getProfileUrl())
+                .profileUrl(profileUrl)
                 .color(user.getColor())
                 .gift_notify(user.isGift_notify())
                 .expiry_notify(user.isExpiry_notify())

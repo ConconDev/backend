@@ -18,7 +18,6 @@ public class OrderEventAlarmDto {
     public static OrderEventAlarmDto toDto(Orders orders, User buyer) {
         return OrderEventAlarmDto.builder()
                 .orderId(orders.getId())
-                .orderTitle(orders.getTitle())
                 .sellerId(orders.getSeller().getId())
                 .sellerName(orders.getSeller().getUsername())
                 .buyerId(buyer.getId())
