@@ -52,6 +52,9 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.566'
 
 	implementation 'com.opencsv:opencsv:5.5'
+
+	// boot-pay
+	implementation 'io.github.bootpay:backend:2.2.3'
 }
 
 tasks.named('test') {
