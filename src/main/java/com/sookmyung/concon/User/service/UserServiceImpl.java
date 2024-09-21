@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    // 이름으로 검색
     @Override
     @Transactional(readOnly = true)
     public List<UserSimpleResponseDto> getUsersByKeyword(String keyword) {

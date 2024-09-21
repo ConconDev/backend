@@ -31,6 +31,12 @@ public class ItemService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ItemSimpleResponseDto> getItemsByKeyword(String keyword) {
+        return itemRepository.findByNameContaining(keyword)
+                .stream().map(itemFacade::toSimpleDto).toList();
+    }
+
     // 아이디로 아이템 조회
     @Transactional(readOnly = true)
     public ItemDetailResponseDto getItemById(Long itemId) {
