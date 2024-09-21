@@ -1,6 +1,8 @@
 package com.sookmyung.concon.Item.controller;
 
 import com.sookmyung.concon.Item.Entity.Item;
+import com.sookmyung.concon.Item.dto.ItemCreateDto;
+import com.sookmyung.concon.Item.dto.ItemCreateResponseDto;
 import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
 import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import com.sookmyung.concon.Item.service.ItemService;
@@ -39,12 +41,12 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemByName(name));
     }
 
-    @Operation(summary = "item 생성")
-    @PostMapping
-    public ResponseEntity<ItemDetailResponseDto> addItem(
-            @RequestBody Item item) {
-        return ResponseEntity.ok(itemService.saveItem(item));
-    }
+//    @Operation(summary = "item 생성")
+//    @PostMapping
+//    public ResponseEntity<ItemCreateResponseDto> addItem(
+//            @RequestBody ItemCreateDto request) {
+//        return ResponseEntity.ok(itemService.saveItem(request));
+//    }
 
     @Operation(summary = "id로 item 삭제")
     @DeleteMapping("/{item_id}")

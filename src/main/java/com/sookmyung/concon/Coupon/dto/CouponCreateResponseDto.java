@@ -9,22 +9,29 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
-public class CouponSimpleResponseDto {
+public class CouponCreateResponseDto {
     private ItemSimpleResponseDto item;
     private LocalDate expirationDate;
     private Double price;
     private String category;
     private boolean isUsed;
     private boolean isBuyFlag;
+    private String barcodeImageUploadUrl;
+    private String couponImageUploadUrl;
 
-    public static CouponSimpleResponseDto toDto(Coupon coupon, ItemSimpleResponseDto item, boolean isUsed) {
-        return CouponSimpleResponseDto.builder()
+    public static CouponCreateResponseDto toDto(Coupon coupon, ItemSimpleResponseDto item,
+                                         String barcodeImageUploadUrl, String couponImageUploadUrl) {
+        return CouponCreateResponseDto.builder()
                 .item(item)
                 .expirationDate(coupon.getExpirationDate())
-                .category(coupon.getCategory())
                 .price(coupon.getRemainingPrice())
-                .isUsed(isUsed)
+                .category(coupon.getCategory())
+                .isUsed(false)
                 .isBuyFlag(coupon.isBuyFlag())
+                .barcodeImageUploadUrl(barcodeImageUploadUrl)
+                .couponImageUploadUrl(couponImageUploadUrl)
                 .build();
     }
+
+
 }

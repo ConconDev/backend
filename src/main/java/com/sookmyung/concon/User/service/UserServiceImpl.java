@@ -1,6 +1,7 @@
 package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.Item.service.ItemService;
+import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
@@ -13,15 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// TODO : 사진 조회 수정
 // tODO : paging 처리
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final String PREFIX = "user:";
     private final OrderUserFacade orderUserFacade;
     private final UserRepository userRepository;
     private final ItemService itemService;
     private final PhotoManager photoManager;
+    private final PhotoFacade photoFacade;
 
     // 나의 정보 조회
     @Override
@@ -32,11 +34,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getUserPhoto(User user) {
-        return photoManager.getPhoto(makePrefix(user), user.getProfilePhotoName(), user.getProfileCreatedDate());
+        return photoFacade.getUserPhotoUrl(user);
     }
 
     private String makePrefix(User user) {
-        return "user:" + user.getId();
+        return PREFIX + user.getId();
     }
 
     // id로 회원 정보 조회

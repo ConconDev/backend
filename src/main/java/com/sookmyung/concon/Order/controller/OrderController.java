@@ -76,13 +76,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrdersByItemId(itemId, page, size));
     }
 
-    // 거래 수정
-    @Operation(summary = "거래 수정")
-    @PutMapping
-    public ResponseEntity<OrderDetailResponseDto> modifyOrder(
-            @RequestBody OrderModifyRequestDto request) {
-        return ResponseEntity.ok(orderService.modifyOrder(request));
-    }
+//    // 거래 수정
+//    @Operation(summary = "거래 수정")
+//    @PutMapping
+//    public ResponseEntity<OrderDetailResponseDto> modifyOrder(
+//            @RequestBody OrderModifyRequestDto request) {
+//        return ResponseEntity.ok(orderService.modifyOrder(request));
+//    }
 
     // 거래 삭제
     @Operation(summary = "거래 삭제")

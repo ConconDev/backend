@@ -3,16 +3,19 @@ package com.sookmyung.concon.Order.service;
 import com.sookmyung.concon.Alarm.eventPublisher.EventPublisher;
 import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
+import com.sookmyung.concon.Coupon.service.CouponFacade;
 import com.sookmyung.concon.Order.dto.*;
 import com.sookmyung.concon.Order.entity.OrderStatus;
 import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Order.exception.OrderInProgressException;
 import com.sookmyung.concon.Order.repository.OrderRepository;
 import com.sookmyung.concon.Order.repository.OrderRequestRedisRepository;
+import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import com.sookmyung.concon.User.repository.UserRepository;
+import com.sookmyung.concon.User.service.UserFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,18 +35,14 @@ public class TransactionService {
     private static final String ORDER_CANCELED = "orderCanceled";
     private static final String ORDER_COMPLETED = "orderCompleted";
 
-    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
-    private final JwtUtil jwtUtil;
 
     private final OrderRequestRedisRepository orderRequestRedisRepository;
     private final EventPublisher eventPublisher;
+    private final UserFacade userFacade;
+    private final CouponFacade couponFacade;
+    private final OrderFacade orderFacade;
 
-    // 사용자 아이디로 사용자 찾기
-    private User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다. "));
-    }
 
     // order 아이디로 거래 찾기
     private Orders findOrdersById(Long orderId) {
@@ -51,25 +50,17 @@ public class TransactionService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문을 조회할 수 없습니다."));
     }
 
-    // 토큰으로 사용자 찾기
-    private User findUserByToken(String token) {
-        return userRepository.findByEmail(jwtUtil.getEmail(token.split(" ")[1]))
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 조회할 수 없습니다."));
-    }
 
     // TODO : 사진
-    private static OrderDetailResponseDto toOrderDetailDto(Orders order) {
-        Coupon coupon = order.getCoupon();
-        return OrderDetailResponseDto.toDto(order,
-                CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null)
-                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer(), "") : null, UserSimpleResponseDto.toDto(order.getSeller(), ""));
+    private OrderDetailResponseDto toOrderDetailDto(Orders order) {
+        return orderFacade.toDetailDto(order);
     }
 
     // 거래 요청
     @Transactional
     public OrderRequestResponseDto requestOrder(Long orderId, String token) {
         Orders orders = findOrdersById(orderId);
-        User buyer = findUserByToken(token);
+        User buyer = userFacade.findUserByToken(token);
         if (orders.getStatus() == OrderStatus.IN_PROGRESS) {
             throw new OrderInProgressException("이 주문은 이미 거래 중입니다. ");
         }
@@ -81,14 +72,14 @@ public class TransactionService {
         eventPublisher.publishEvent(sellerId, ORDER_REQUESTED, response);
         return OrderRequestResponseDto.toDto(orders, buyer);
     }
-    // TODO : 사진
+
     // 거래 요청 전체 조회
     @Transactional(readOnly = true)
     public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
         return orderRequestRedisRepository.findAllMembersById(orderId)
                 .stream()
-                .map(this::findUserById)
-                .map((user) -> UserSimpleResponseDto.toDto(user, ""))
+                .map(userFacade::findUserById)
+                .map(userFacade::toSimpleDto)
                 .toList();
     }
 
@@ -96,7 +87,7 @@ public class TransactionService {
     @Transactional
     public OrderDetailResponseDto acceptTransaction(TransactionAcceptRequestDto request) {
         Orders order = findOrdersById(request.getOrderId());
-        User buyer = findUserById(request.getBuyerId());
+        User buyer = userFacade.findUserById(request.getBuyerId());
 
         order.setBuyer(buyer);
         order.updateStatus(OrderStatus.IN_PROGRESS);

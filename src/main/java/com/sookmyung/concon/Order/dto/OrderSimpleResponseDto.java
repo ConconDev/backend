@@ -11,21 +11,16 @@ import lombok.Getter;
 @Getter
 public class OrderSimpleResponseDto {
     private Long id;
-    private String imageUrl;
     private CouponSimpleResponseDto coupon;
     private UserIdResponseDto seller;
-    private String title;
-    private double price;
     private OrderStatus status;
 
-    public static OrderSimpleResponseDto toDto(Orders orders, CouponSimpleResponseDto coupon, UserIdResponseDto seller) {
+    public static OrderSimpleResponseDto toDto(Orders orders, CouponSimpleResponseDto coupon,
+                                               UserIdResponseDto seller) {
         return OrderSimpleResponseDto.builder()
                 .id(orders.getId())
-                .imageUrl(orders.getImageUrl())
                 .coupon(coupon)
                 .seller(seller)
-                .title(orders.getTitle())
-                .price(orders.getPrice())
                 .status(orders.getStatus())
                 .build();
     }

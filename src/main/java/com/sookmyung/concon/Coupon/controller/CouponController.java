@@ -1,6 +1,7 @@
 package com.sookmyung.concon.Coupon.controller;
 
 import com.sookmyung.concon.Coupon.dto.CouponCreateRequestDto;
+import com.sookmyung.concon.Coupon.dto.CouponCreateResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
 import com.sookmyung.concon.Coupon.service.CouponService;
@@ -20,7 +21,7 @@ public class CouponController {
 
     @Operation(summary = "쿠폰 생성")
     @PostMapping
-    public ResponseEntity<CouponDetailResponseDto> createCoupon(
+    public ResponseEntity<CouponCreateResponseDto> createCoupon(
             @RequestHeader("Authorization") String token,
             @RequestBody CouponCreateRequestDto request) {
         return ResponseEntity.ok(couponService.saveCoupon(token, request));

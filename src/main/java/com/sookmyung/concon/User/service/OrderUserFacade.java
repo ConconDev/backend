@@ -7,6 +7,7 @@ import com.sookmyung.concon.Order.dto.OrderDetailResponseDto;
 import com.sookmyung.concon.Order.dto.OrderSimpleResponseDto;
 import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Order.repository.OrderRepository;
+import com.sookmyung.concon.Order.service.OrderFacade;
 import com.sookmyung.concon.Order.service.OrderService;
 import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.User.Entity.User;
@@ -29,28 +30,26 @@ import java.util.List;
 public class OrderUserFacade {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final OrderFacade orderFacade;
     private final JwtUtil jwtUtil;
+
+    private final static String PREFIX = "item:";
     private final PhotoManager photoManager;
+
+
+    private String makePrefix(Orders orders) {
+        return PREFIX + orders.getId();
+    }
 
     /*
     dto 변환 메소드 추출
      */
-    // OrderDetailResponseDto 변환 메소드
-    // TODO : 사진
-    public OrderDetailResponseDto toOrderDetailDto(Orders order) {
-        Coupon coupon = order.getCoupon();
-        return OrderDetailResponseDto.toDto(order,
-                CouponSimpleResponseDto.toDto(coupon, coupon.getUsedDate() != null)
-                , order.getBuyer() != null ? UserSimpleResponseDto.toDto(order.getBuyer(), "") : null, UserSimpleResponseDto.toDto(order.getSeller(), ""));
-    }
+
 
     // List<OrderSimpleResponseDto> 변환 메소드
     public List<OrderSimpleResponseDto> toOrderSimpleDtoList(List<Orders> orders) {
-        return orders.stream().map(order ->
-                OrderSimpleResponseDto.toDto(order,
-                        CouponSimpleResponseDto.toDto(order.getCoupon(),
-                                order.getCoupon().getUsedDate() != null),
-                        UserIdResponseDto.toDto(order.getSeller()))).toList();
+        return orders.stream().map(orderFacade::toSimpleDto).toList();
+
     }
 
     @Transactional(readOnly = true)
@@ -66,8 +65,10 @@ public class OrderUserFacade {
     @Transactional(readOnly = true)
     public UserDetailResponseDto toUserDetailResponseDto(Long userId) {
         User user = findUserById(userId);
-        List<Orders> top2BySellerOrderByCreatedDateDesc = orderRepository.findTop2BySellerOrderByCreatedDateDesc(user);
-        List<OrderSimpleResponseDto> top2OrderByUser = toOrderSimpleDtoList(top2BySellerOrderByCreatedDateDesc);
+        List<OrderSimpleResponseDto> top2OrderByUser =
+                        orderRepository.findTop2BySellerOrderByCreatedDateDesc(user)
+                                .stream().map(orderFacade::toSimpleDto).toList();
+
         String photoUrl = photoManager.getPhoto("user:" + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
         return UserDetailResponseDto.toDto(user, top2OrderByUser, null, photoUrl);
     }
