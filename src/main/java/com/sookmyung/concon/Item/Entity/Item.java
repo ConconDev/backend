@@ -8,8 +8,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.nio.file.FileStore;
-
 @Entity
 @Table(name = "item")
 @Getter

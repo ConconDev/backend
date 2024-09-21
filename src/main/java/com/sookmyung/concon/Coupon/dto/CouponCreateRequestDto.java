@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 public class CouponCreateRequestDto {
+    private Long itemId;
     private String barcode;
     private String barcodeImage;
     private String imageFileName;
@@ -27,7 +28,6 @@ public class CouponCreateRequestDto {
                 .price(price)
                 .expirationDate(expirationDate)
                 .buyFlag(false)
-                .usedDate(null)
                 .build();
     }
 }
