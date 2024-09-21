@@ -24,7 +24,7 @@ public class ReviewService {
     @Async
     public void createReview(Review review) {
         // Redis에 캐싱
-        redisTemplate.opsForValue().set("review:" + review.getId(), review);
+        redisTemplate.opsForValue().set("review:" + review.getReviewId(), review);
 
         // 배치 처리로 RDB에 저장
         saveReviewToDatabase(review);

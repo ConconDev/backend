@@ -24,4 +24,5 @@ public interface UserService {
     List<UserDetailResponseDto> get5RandomUserByItemName(String itemName);
 
     void deleteUser(String token);
+
 }
