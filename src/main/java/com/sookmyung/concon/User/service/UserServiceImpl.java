@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService {
         if (request.getFileName() != null && !request.getFileName().isEmpty()) {
             String fileName = request.getFileName();
             // TODO : modify
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
             LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
             photoModifyUrl = photoManager.updatePhoto(makePrefix(user),
                             user.getProfilePhotoName(), user.getProfileCreatedDate(),

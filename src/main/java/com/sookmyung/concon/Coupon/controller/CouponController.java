@@ -36,10 +36,18 @@ public class CouponController {
 
     // 쿠폰 삭제 API
     @Operation(summary = "쿠폰 삭제")
-    @DeleteMapping("/{couponId}")
-    public ResponseEntity<Object> deleteCoupon(@PathVariable Long couponId) {
+    @DeleteMapping("/{coupon-id}")
+    public ResponseEntity<Object> deleteCoupon(
+            @PathVariable("coupon-id") Long couponId) {
         couponService.deleteCoupon(couponId);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "coupon id로 상세조회")
+    @GetMapping("/{coupon-id}")
+    public ResponseEntity<CouponDetailResponseDto> getCouponDetail(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("coupon-id") Long couponId) {
+        return ResponseEntity.ok(couponService.getCouponDetail(token, couponId));
+    }
 }
