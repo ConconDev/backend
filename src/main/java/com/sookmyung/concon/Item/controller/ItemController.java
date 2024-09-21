@@ -1,10 +1,7 @@
 package com.sookmyung.concon.Item.controller;
 
 import com.sookmyung.concon.Item.Entity.Item;
-import com.sookmyung.concon.Item.dto.ItemCreateDto;
-import com.sookmyung.concon.Item.dto.ItemCreateResponseDto;
-import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
-import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
+import com.sookmyung.concon.Item.dto.*;
 import com.sookmyung.concon.Item.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,5 +51,12 @@ public class ItemController {
             @PathVariable("item_id") Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "item video 추가")
+    @PostMapping("/video")
+    public ResponseEntity<ItemVideoCreateResponseDto> createItemVideo(
+            @RequestBody ItemVideoCreateRequestDto request) {
+        return ResponseEntity.ok(itemService.updateVideoUrl(request));
     }
 }

@@ -1,10 +1,7 @@
 package com.sookmyung.concon.Item.service;
 
 import com.sookmyung.concon.Item.Entity.Item;
-import com.sookmyung.concon.Item.dto.ItemCreateDto;
-import com.sookmyung.concon.Item.dto.ItemCreateResponseDto;
-import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
-import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
+import com.sookmyung.concon.Item.dto.*;
 import com.sookmyung.concon.Item.repository.ItemRepository;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
@@ -61,13 +58,14 @@ public class ItemService {
 
     // 동영상 저장
     @Transactional
-    public String updateVideoUrl(Long itemId, String videoName) {
-        Item item = itemFacade.findItemById(itemId);
+    public ItemVideoCreateResponseDto updateVideoUrl(ItemVideoCreateRequestDto request) {
+        Item item = itemFacade.findItemById(request.getItemId());
         LocalDateTime now = LocalDateTime.now();
 
-        item.updateVideo(videoName, now);
+        item.updateVideo(request.getVideoName(), now);
 
-        return photoFacade.uploadItemVideo(item, videoName, now);
+        return ItemVideoCreateResponseDto.toDto(item,
+                photoFacade.uploadItemVideo(item, request.getVideoName(), now));
     }
 
     // 아이템 삭제 (test 용)
