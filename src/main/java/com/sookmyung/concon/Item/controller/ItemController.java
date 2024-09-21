@@ -31,11 +31,18 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(itemId));
     }
 
-    @Operation(summary = "이름으로 item 찾기")
+    @Operation(summary = "이름으로 item 조회")
     @GetMapping
     public ResponseEntity<ItemDetailResponseDto> getItemByName(
             @RequestParam("name") String name) {
         return ResponseEntity.ok(itemService.getItemByName(name));
+    }
+
+    @Operation(summary = "이름 키워드로 item 검색")
+    @GetMapping("/search")
+    public ResponseEntity<List<ItemSimpleResponseDto>> searchItem(
+            @RequestParam("name") String name) {
+        return ResponseEntity.ok(itemService.getItemsByKeyword(name));
     }
 
 //    @Operation(summary = "item 생성")
