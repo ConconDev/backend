@@ -1,5 +1,7 @@
 package com.sookmyung.concon.Review.service;
 
+import com.sookmyung.concon.Review.dto.ReviewRequest;
+import com.sookmyung.concon.Review.dto.ReviewUpdateRequest;
 import com.sookmyung.concon.Review.entity.Review;
 import com.sookmyung.concon.Review.repository.ReviewRepository;
 import com.sookmyung.concon.User.Entity.User;
@@ -23,9 +25,17 @@ public class ReviewService {
 
     // 후기 작성
     @Async
-    public void createReview(Review review) {
+    public void createReview(ReviewRequest reviewRequest) {
+        // ReviewRequest에서 엔티티 생성
+        Review review = Review.builder()
+                .userId(reviewRequest.getUserId())
+                .itemId(reviewRequest.getItemId())
+                .score(reviewRequest.getScore())
+                .content(reviewRequest.getContent())
+                .build();
+
         // Redis에 캐싱
-        redisTemplate.opsForValue().set("review:" + review.getReviewId(), review);
+        // redisTemplate.opsForValue().set("review:" + review.getReviewId(), review);
 
         // 배치 처리로 RDB에 저장
         saveReviewToDatabase(review);
@@ -49,16 +59,16 @@ public class ReviewService {
 
     // 후기 수정
     @Async
-    public void updateReview(Long reviewId, Review updatedReview) {
+    public void updateReview(Long reviewId, ReviewUpdateRequest updateRequest) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
 
-        // 후기 내용 업데이트
-        review.setScore(updatedReview.getScore());
-        review.setContent(updatedReview.getContent());
+        // ReviewUpdateRequest에서 업데이트된 값 설정
+        review.setScore(updateRequest.getScore());
+        review.setContent(updateRequest.getContent());
 
         // Redis 업데이트
-        redisTemplate.opsForValue().set("review:" + reviewId, review);
+        // redisTemplate.opsForValue().set("review:" + reviewId, review);
 
         // RDB 업데이트
         reviewRepository.save(review);

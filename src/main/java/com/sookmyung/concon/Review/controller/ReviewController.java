@@ -26,19 +26,7 @@ public class ReviewController {
     @Operation(summary = "후기 작성")
     @PostMapping
     public ResponseEntity<Void> createReview(@RequestBody ReviewRequest reviewRequest) {
-        Long userId = reviewRequest.getUserId();
-        Long itemId = reviewRequest.getItemId();
-        double score = reviewRequest.getScore();
-        String content = reviewRequest.getContent();
-
-        Review review = Review.builder()
-                .userId(userId)
-                .itemId(itemId)
-                .score(score)
-                .content(content)
-                .build();
-
-        reviewService.createReview(review);
+        reviewService.createReview(reviewRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -66,14 +54,7 @@ public class ReviewController {
     @Operation(summary = "후기 수정")
     @PutMapping("/{reviewId}")
     public ResponseEntity<Void> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest updateRequest) {
-        double score = updateRequest.getScore();
-        String content = updateRequest.getContent();
-
-        Review updatedReview = new Review();
-        updatedReview.setScore(score);
-        updatedReview.setContent(content);
-
-        reviewService.updateReview(reviewId, updatedReview);
+        reviewService.updateReview(reviewId, updateRequest);
         return ResponseEntity.ok().build();
     }
 
