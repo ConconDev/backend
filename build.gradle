@@ -52,6 +52,14 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.566'
 
 	implementation 'com.opencsv:opencsv:5.5'
+
+	// boot-pay
+	implementation 'io.github.bootpay:backend:+'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 카카오 로그인
+//	implementation ''
+
 }
 
 tasks.named('test') {
