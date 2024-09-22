@@ -35,7 +35,16 @@ public class AuthController {
     public ResponseEntity<String> kakaoLogin(
             @RequestParam("email") String email,
             @RequestParam("password") String password) {
-        return ResponseEntity.ok("JWT Token");
+
+        String redirectUrl = UriComponentsBuilder.fromPath("/api/auth/kakao/login")
+                .queryParam("email", email)
+                .queryParam("password", password)
+                .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", redirectUrl);
+
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @Operation(summary = "카카오 로그인")
