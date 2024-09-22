@@ -54,6 +54,12 @@ public class User {
     @OneToMany(mappedBy = "seller")
     private List<Orders> orders;
 
+
+    public void updateVerifiedStatus(boolean verified) {
+        is_verified = verified;
+    }
+
+
     public void update(UserModifyRequestDto request) {
         this.username = request.getUsername();
         this.color = request.getColor();
@@ -62,6 +68,7 @@ public class User {
         this.expiry_days = request.getExpiry_days();
         this.is_verified = request.is_verified();
     }
+
 
     public void updatePhoto(String fileName, LocalDateTime time) {
         this.profilePhotoName = fileName;
