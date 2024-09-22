@@ -1,5 +1,6 @@
 package com.sookmyung.concon.configuration;
 
+import com.sookmyung.concon.KakaoLogin.service.KakaoService;
 import com.sookmyung.concon.User.Jwt.JwtFilter;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.Jwt.LoginFilter;
@@ -28,7 +29,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, CorsConfigurationSource corsConfigurationSource) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          JwtUtil jwtUtil, CorsConfigurationSource corsConfigurationSource) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.corsConfigurationSource = corsConfigurationSource;
@@ -56,7 +58,9 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/api/auth/login", "/api/auth/signUp", "/swagger-ui/**", "/api-docs/**", "/swagger-ui.html", "/api/test", "/ping", "/api/import-csv").permitAll()
+                        .requestMatchers("/", "/api/auth/**", "/swagger-ui/**", "/api-docs/**",
+                                "/swagger-ui.html", "/api/test", "/ping", "/api/import-csv",
+                                "/api/kakao", "/api/kakao/**", "/loginForm").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated());
@@ -65,7 +69,9 @@ public class SecurityConfig {
 
         // 현재 disable 되어있는 UsernamePasswordAuthenticationFilter 대신에 filter를 넣어줄 것이기 때문에 addFilterAt 사용
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, "/api/auth/login"), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),
+                        jwtUtil, "/api/auth/login", "/api/auth/kakao/login"),
+                        UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
 
