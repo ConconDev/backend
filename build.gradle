@@ -57,6 +57,9 @@ dependencies {
 	implementation 'io.github.bootpay:backend:+'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// 카카오 로그인
+//	implementation ''
+
 }
 
 tasks.named('test') {

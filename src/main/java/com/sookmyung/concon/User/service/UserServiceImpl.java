@@ -7,6 +7,8 @@ import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.*;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,7 +98,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<UserDetailResponseDto> get5RandomUser() {
-        List<User> randomUsers = userRepository.findRandomUsers();
+
+        Pageable pageable = PageRequest.of(0, 5);
+        List<User> randomUsers = userRepository.findRandomUsers(pageable);
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
     }
 
@@ -105,7 +109,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDetailResponseDto> get5RandomUserByItemName(String itemName) {
         Long itemId = itemService.getItemByName(itemName).getItemId();
-        List<User> randomUsers = userRepository.findRandomUsersByItem(itemId);
+        Pageable pageable = PageRequest.of(0, 5);
+        List<User> randomUsers = userRepository.findRandomUsersByItem(itemId, pageable);
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
     }
 
