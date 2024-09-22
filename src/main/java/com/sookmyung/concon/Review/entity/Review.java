@@ -17,9 +17,9 @@ public class Review {
     @Column(name = "review_id")
     private Long reviewId;
 
-    private Long userId; // User ID를 저장
+    private Long userId;
 
-    private Long itemId; // Item ID를 저장
+    private Long itemId;
 
     private double score;
 
