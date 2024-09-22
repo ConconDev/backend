@@ -34,18 +34,11 @@ public class ReviewController {
     @Operation(summary = "후기 작성")
     @PostMapping
     public ResponseEntity<Void> createReview(@RequestBody ReviewRequest reviewRequest) {
-        // JWT에서 사용자 ID 추출
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String token = auth.getName();
         String userId = jwtUtil.getUserId(token);
 
         reviewService.createReview(reviewRequest, Long.parseLong(userId));
-
-//        reviewService.createReview(new ReviewRequest(
-//                reviewRequest.getItemId(),
-//                reviewRequest.getScore(),
-//                reviewRequest.getContent()
-//        ));
         return ResponseEntity.ok().build();
     }
 
