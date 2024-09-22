@@ -112,8 +112,6 @@ public class UserServiceImpl implements UserService {
         Long itemId = itemService.getItemByName(itemName).getItemId();
         Pageable pageable = PageRequest.of(0, 5);
         List<User> randomUsers = userRepository.findRandomUsersByItem(itemId, pageable);
-
-
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
     }
 
