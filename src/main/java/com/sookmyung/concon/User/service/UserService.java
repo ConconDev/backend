@@ -23,4 +23,5 @@ public interface UserService {
     public List<UserDetailResponseDto> get5RandomUserByCategory(String category);
 
     void deleteUser(String token);
+
 }
