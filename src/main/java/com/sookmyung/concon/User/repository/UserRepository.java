@@ -27,4 +27,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE o.coupon.item.id = :itemId " +
             "ORDER BY FUNCTION('RAND') ")
     List<User> findRandomUsersByItem(Long itemId, Pageable pageable);
+
+
+    @Query("SELECT DISTINCT u FROM User u " +
+            "JOIN u.orders o " +
+            "WHERE o.coupon.item.category = :category " +
+            "ORDER BY FUNCTION('RAND')")
+    List<User> findRandomUsersByCategory(String category, Pageable pageable);
 }

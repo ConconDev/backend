@@ -60,6 +60,13 @@ public class UserController {
         return ResponseEntity.ok(userService.get5RandomUserByItemName(itemName));
     }
 
+    @Operation(summary = "카테고리로 랜덤 5명 유저 조회", description = "카테고리로 해당 상품을 판매하는 랜덤 5명의 유저를 조회")
+    @GetMapping("/random-by-category")
+    public ResponseEntity<List<UserDetailResponseDto>> getRandomUsersByCategory(
+            @RequestParam("category") String category) {
+        return ResponseEntity.ok(userService.get5RandomUserByCategory(category));
+    }
+
     // 회원 정보 수정
     @Operation(summary = "회원 정보 수정")
     @PutMapping
