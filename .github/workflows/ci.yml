@@ -9,10 +9,10 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: concon            # ECR 리포지토리 이름
-  ECS_SERVICE: concon-service             # ECS 서비스 이름
-  ECS_CLUSTER: concon-cluster             # ECS 클러스터 이름
+  ECS_SERVICE: concon-service-iam           # ECS 서비스 이름
+  ECS_CLUSTER: concon-cluster-iam2           # ECS 클러스터 이름
   ECS_TASK_DEFINITION: .aws/task-definition.json # ECS 태스크 정의 파일
-  CONTAINER_NAME: my-container
+  CONTAINER_NAME: concon-container-iam
 
 jobs:
   build-and-deploy:
@@ -34,9 +34,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: |
-          echo ${{secrets.APPLICATION_SECRET_YML}} | base64 --decode > ./src/main/resources/application-secret.properties
-          ./gradlew clean build --exclude-task test
+        run: ./gradlew clean build --exclude-task test
+#          | echo ${{secrets.APPLICATION_SECRET_YML}} | base64 --decode > ./src/main/resources/application-secret.properties
+
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -62,18 +62,30 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+#      - name: Fill in the new image ID in the Amazon ECS task definition
+#        id: task-def
+#        uses: aws-actions/amazon-ecs-render-task-definition@v1
+#        with:
+#          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+#          container-name: ${{ env.CONTAINER_NAME }}
+#          image: ${{ steps.build-image.outputs.image }}
+#          environment-variables: |
+#            SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
+#            SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
+#            SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+#            SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}
+#            SPRING_DATA_REDIS_HOST=${{ secrets.SPRING_DATA_REDIS_HOST }}
+#            SPRING_DATA_REDIS_PORT=${{ secrets.SPRING_DATA_REDIS_PORT }}
+#            AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+#            TASK_DEFINITION_FAMILY=${{ secrets.TASK_DEFINITION_FAMILY }}
+#            IAM_ROLE_NAME=${{ secrets.IAM_ROLE_NAME }}
+#
+#
+#
+#      - name: Deploy Amazon ECS task definition
+#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#        with:
+#          task-definition: ${{ steps.task-def.outputs.task-definition }}
+#          service: ${{ env.ECS_SERVICE }}
+#          cluster: ${{ env.ECS_CLUSTER }}
+#          wait-for-service-stability: true

@@ -1,6 +1,7 @@
 package com.sookmyung.concon.Coupon.dto;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
+import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,18 +10,21 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class CouponSimpleResponseDto {
-    private String name;
+    private Long couponId;
+    private ItemSimpleResponseDto item;
     private LocalDate expirationDate;
     private Double price;
     private String category;
     private boolean isUsed;
     private boolean isBuyFlag;
 
-    public static CouponSimpleResponseDto toDto(Coupon coupon, boolean isUsed) {
+    public static CouponSimpleResponseDto toDto(Coupon coupon, ItemSimpleResponseDto item, boolean isUsed) {
         return CouponSimpleResponseDto.builder()
-                .name(coupon.getName())
+                .couponId(coupon.getId())
+                .item(item)
                 .expirationDate(coupon.getExpirationDate())
                 .category(coupon.getCategory())
+                .price(coupon.getRemainingPrice())
                 .isUsed(isUsed)
                 .isBuyFlag(coupon.isBuyFlag())
                 .build();

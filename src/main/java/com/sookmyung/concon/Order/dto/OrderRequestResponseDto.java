@@ -15,7 +15,6 @@ public class OrderRequestResponseDto {
     public static OrderRequestResponseDto toDto(Orders orders, User requester) {
         return OrderRequestResponseDto.builder()
                 .orderId(orders.getId())
-                .orderTitle(orders.getTitle())
                 .requesterId(requester.getId())
                 .requesterName(requester.getUsername())
                 .build();

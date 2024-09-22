@@ -12,20 +12,14 @@ import java.time.LocalDate;
 public class OrderCreateRequestDto {
     private Long couponId;
     private Long sellerId;
-    private String title;
-    private String content;
-    private double price;
 
-    public Orders toEntity(Coupon coupon, User seller, String imageUrl) {
+    public Orders toEntity(Coupon coupon, User seller) {
         return Orders.builder()
                 .coupon(coupon)
+                .itemPhotoPath(coupon.getItemImagePath())
                 .seller(seller)
-                .title(title)
-                .content(content)
-                .price(price)
                 .createdDate(LocalDate.now())
                 .status(OrderStatus.AVAILABLE)
-                .imageUrl(imageUrl)
                 .build();
     }
 }

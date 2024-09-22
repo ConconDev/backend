@@ -48,8 +48,15 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 //	implementation 'io.swagger.core.v3:swagger-models:2.2.8'
 
+
 	// boot-pay
 	implementation 'io.github.bootpay:backend:2.2.3'
+
+	// s3
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.566'
+
+	implementation 'com.opencsv:opencsv:5.5'
+
 }
 
 tasks.named('test') {

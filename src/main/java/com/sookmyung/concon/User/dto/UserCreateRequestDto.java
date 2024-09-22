@@ -17,7 +17,6 @@ public class UserCreateRequestDto {
                 .email(email)
                 .username("username")
                 .password(password)
-                .profileUrl(null)
                 .role(RoleType.USER)
                 .color("0xff848484")
                 .gift_notify(false)

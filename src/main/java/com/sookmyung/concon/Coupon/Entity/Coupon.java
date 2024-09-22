@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,15 +28,20 @@ public class Coupon {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    // 바코드 + 바코드 이미지 url
     private String barcode;
-
     private String barcodeImageFileName;
+    private LocalDateTime barcodeImageCreatedDate;
 
-    private String imageUrl;
+    // 아이템 사진
+    private String itemImagePath;
 
-    private String name;
+    // 쿠폰 사진
+    private String imageFileName;
+    private LocalDateTime imageCreateDate;
 
-    private Double price;
+    private Double itemPrice;
+    private Double remainingPrice;
 
     private LocalDate expirationDate;
 
