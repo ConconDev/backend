@@ -9,6 +9,7 @@ import com.sookmyung.concon.Review.service.ReviewService;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "후기")
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
