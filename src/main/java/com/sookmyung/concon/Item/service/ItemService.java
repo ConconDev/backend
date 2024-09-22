@@ -31,6 +31,7 @@ public class ItemService {
                 .toList();
     }
 
+    // 키워드로 아이템 검색
     @Transactional(readOnly = true)
     public List<ItemSimpleResponseDto> getItemsByKeyword(String keyword) {
         return itemRepository.findByNameContaining(keyword)
@@ -49,6 +50,13 @@ public class ItemService {
     public ItemDetailResponseDto getItemByName(String name) {
         Item item = itemFacade.findItemByName(name);
         return itemFacade.toDetailDto(item);
+    }
+
+    // 카테고리로 아이템 조회
+    @Transactional(readOnly = true)
+    public List<ItemSimpleResponseDto> getItemByCategory(String category) {
+        List<Item> item = itemFacade.findItemsByCategory(category);
+        return item.stream().map(itemFacade::toSimpleDto).toList();
     }
 
     // 아이템 저장 (test 용)

@@ -1,5 +1,6 @@
 package com.sookmyung.concon.User.service;
 
+import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
 import com.sookmyung.concon.Item.service.ItemService;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
@@ -99,7 +100,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<UserDetailResponseDto> get5RandomUser() {
-
         Pageable pageable = PageRequest.of(0, 5);
         List<User> randomUsers = userRepository.findRandomUsers(pageable);
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
@@ -114,6 +114,17 @@ public class UserServiceImpl implements UserService {
         List<User> randomUsers = userRepository.findRandomUsersByItem(itemId, pageable);
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
     }
+
+    // 카테고리로 랜덤 5명의 판매 정보 가져오기
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDetailResponseDto> get5RandomUserByCategory(String category) {
+        Pageable pageable = PageRequest.of(0, 5);
+        List<User> randomUsers = userRepository.findRandomUsersByCategory(category, pageable);
+        return orderUserFacade.toUserDetailResponseDtos(randomUsers);
+    }
+
+
 
     // 회원 탈퇴
     @Override

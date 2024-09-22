@@ -45,6 +45,13 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemsByKeyword(name));
     }
 
+    @Operation(summary = "카테고리로 item 검색")
+    @GetMapping("category")
+    public ResponseEntity<List<ItemSimpleResponseDto>> getItemByCategory(
+            @RequestParam("category") String category) {
+        return ResponseEntity.ok(itemService.getItemByCategory(category));
+    }
+
 //    @Operation(summary = "item 생성")
 //    @PostMapping
 //    public ResponseEntity<ItemCreateResponseDto> addItem(

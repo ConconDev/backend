@@ -8,6 +8,8 @@ import com.sookmyung.concon.Photo.service.PhotoFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ItemFacade {
@@ -22,6 +24,10 @@ public class ItemFacade {
     public Item findItemByName(String itemName) {
         return itemRepository.findByName(itemName)
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이템을 조회할 수 없습니다. "));
+    }
+
+    public List<Item> findItemsByCategory(String category) {
+        return itemRepository.findByCategory(category);
     }
 
     public ItemSimpleResponseDto toSimpleDto(Item item) {
