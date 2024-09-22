@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 public class Coupon {
 
     @Id
@@ -51,6 +52,8 @@ public class Coupon {
 
     @Setter
     private boolean buyFlag;   // 구매 여부
+
+    private String memo;
 
     public void changeUser(User user) {
         this.user = user;

@@ -19,6 +19,7 @@ public class CouponCreateResponseDto {
     private boolean isBuyFlag;
     private String barcodeImageUploadUrl;
     private String couponImageUploadUrl;
+    private String memo;
 
     public static CouponCreateResponseDto toDto(Coupon coupon, ItemSimpleResponseDto item,
                                          String barcodeImageUploadUrl, String couponImageUploadUrl) {
@@ -32,6 +33,7 @@ public class CouponCreateResponseDto {
                 .isBuyFlag(coupon.isBuyFlag())
                 .barcodeImageUploadUrl(barcodeImageUploadUrl)
                 .couponImageUploadUrl(couponImageUploadUrl)
+                .memo(coupon.getMemo())
                 .build();
     }
 

@@ -50,4 +50,13 @@ public class CouponController {
             @PathVariable("coupon-id") Long couponId) {
         return ResponseEntity.ok(couponService.getCouponDetail(token, couponId));
     }
+
+    @Operation(summary = "쿠폰 수정")
+    @PutMapping("/{coupon-id}")
+    public ResponseEntity<CouponDetailResponseDto> updateCoupon(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("coupon-id") Long couponId,
+            @RequestBody CouponCreateRequestDto request) {
+        return ResponseEntity.ok(couponService.updateCoupon(token, couponId, request));
+    }
 }

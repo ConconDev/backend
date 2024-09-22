@@ -26,6 +26,7 @@ public class CouponDetailResponseDto {
     private LocalDate usedDate;
     private String category;
     private Boolean buyFlag;
+    private String memo;
 
     // TODO : Exception 처리
     public static CouponDetailResponseDto toDto(Coupon coupon, UserSimpleResponseDto user,
@@ -44,6 +45,7 @@ public class CouponDetailResponseDto {
                 .usedDate(coupon.getUsedDate())
                 .category(coupon.getCategory())
                 .buyFlag(coupon.isBuyFlag())
+                .memo(coupon.getMemo())
                 .build();
     }
 
