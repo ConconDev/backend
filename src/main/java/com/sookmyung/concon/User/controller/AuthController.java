@@ -31,6 +31,14 @@ public class AuthController {
     }
 
     @Operation(summary = "카카오 로그인")
+    @PostMapping("/kakao/login")
+    public ResponseEntity<String> kakaoLogin(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password) {
+        return ResponseEntity.ok("JWT Token");
+    }
+
+    @Operation(summary = "카카오 로그인")
     @GetMapping("/kakao/callback")
     public ResponseEntity<LoginRequestDto> kakaoCallback(String code) {
         LoginRequestDto loginRequestDto = kakaoService.kakaoLogin(code);
