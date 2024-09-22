@@ -18,6 +18,7 @@ import com.sookmyung.concon.User.repository.UserRepository;
 import com.sookmyung.concon.User.service.UserFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -135,5 +136,22 @@ public class TransactionService {
         eventPublisher.publishEvent(order.getBuyer().getId(), ORDER_COMPLETED, response);
 
         return toOrderDetailDto(order);
+    }
+
+    @Transactional
+    public String transaction(Long orderId) {
+        Orders order = findOrdersById(orderId);
+        order.updateStatus(OrderStatus.COMPLETED);
+        order.setTransactionDate(LocalDate.now());
+
+        Coupon coupon = order.getCoupon();
+        coupon.changeUser(order.getBuyer());
+        coupon.setBuyFlag(true);
+
+        // 구매자에게 알람
+        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, order.getBuyer());
+        eventPublisher.publishEvent(order.getBuyer().getId(), ORDER_COMPLETED, response);
+
+        return "200 OK";
     }
 }

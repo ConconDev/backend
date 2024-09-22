@@ -60,4 +60,11 @@ public class TransactionController {
             @PathVariable("order-id") Long orderId) {
         return ResponseEntity.ok(transactionService.completeTransaction(orderId));
     }
+
+
+    @PostMapping("/transaction/{order-id}")
+    public ResponseEntity<?> transaction(
+            @PathVariable("order-id") Long orderId) {
+        return ResponseEntity.ok(transactionService.transaction(orderId));
+    }
 }

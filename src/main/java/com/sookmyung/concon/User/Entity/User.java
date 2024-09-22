@@ -70,6 +70,7 @@ public class User {
     }
 
 
+
     public void updatePhoto(String fileName, LocalDateTime time) {
         this.profilePhotoName = fileName;
         this.profileCreatedDate = time;
