@@ -2,6 +2,9 @@ package com.sookmyung.concon.User.Jwt;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sookmyung.concon.KakaoLogin.dto.KakaoAccount;
+import com.sookmyung.concon.KakaoLogin.dto.KakaoUserInfoResponse;
+import com.sookmyung.concon.KakaoLogin.service.KakaoService;
 import com.sookmyung.concon.User.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,6 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,10 +35,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, String loginProcessingUrl) {
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, String loginProcessingUrl, String kakaoLoginProcessingUrl) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         setFilterProcessesUrl(loginProcessingUrl);
+        RequestMatcher loginMatcher = new AntPathRequestMatcher(loginProcessingUrl, "POST");
+        RequestMatcher kakaoLoginMatcher = new AntPathRequestMatcher(kakaoLoginProcessingUrl, "GET");
+        setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(loginMatcher, kakaoLoginMatcher));
     }
 
     CachedBodyHttpServletRequest cachedBodyHttpServletRequest;
@@ -47,18 +56,50 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String email = null;
         String password = null;
+        String kakaoCode = null;
 
         log.info("여기는 실행");
         try {
             cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(request);
+            if (request.getRequestURI().equals("/api/auth/kakao/login")) {
+                return handleKakaoLogin(cachedBodyHttpServletRequest);
+            } else {
+                return handleLogin(cachedBodyHttpServletRequest);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse request", e);
+        }
+    }
+
+    private Authentication handleKakaoLogin(HttpServletRequest request) {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        if (email == null || password == null) {
+            throw new RuntimeException("카카오 로그인 정보가 부족합니다. ");
+        }
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
+        System.out.println("loginfilter");
+        return authenticationManager.authenticate(authToken);
+    }
+
+    private Authentication handleLogin(HttpServletRequest request) {
+        String email = null;
+        String password = null;
+
+        log.info("일반 로그인 실행 중");
+
+        try {
             if ("application/json".equals(cachedBodyHttpServletRequest.getContentType())) {
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, String> jsonRequest = objectMapper.readValue(cachedBodyHttpServletRequest.getInputStream(), new TypeReference<Map<String, String>>() {});
+
                 email = jsonRequest.get("email");
                 password = jsonRequest.get("password");
 
-            } else {
+            } else{
                 email = obtainUsername(cachedBodyHttpServletRequest);
                 password = obtainPassword(cachedBodyHttpServletRequest);
             }
