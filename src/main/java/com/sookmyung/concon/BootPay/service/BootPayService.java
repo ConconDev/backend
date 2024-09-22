@@ -112,7 +112,6 @@ public class BootPayService {
                 System.out.println("certificate false: " + res);
                 throw new RuntimeException("인증 실패: " + res.get("message"));
             }
-            return res;
         } catch (Exception e) {
             throw new RuntimeException("인증 오류", e);
         }
