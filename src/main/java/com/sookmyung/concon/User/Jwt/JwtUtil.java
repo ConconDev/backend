@@ -1,5 +1,6 @@
 package com.sookmyung.concon.User.Jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -37,5 +38,9 @@ public class JwtUtil {
                 .signWith(secretKey)
                 .compact();
 
+    }
+
+    public String getUserId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", String.class);
     }
 }
