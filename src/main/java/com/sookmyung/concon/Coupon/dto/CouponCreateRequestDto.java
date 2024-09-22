@@ -17,7 +17,6 @@ public class CouponCreateRequestDto {
     private String imageFileName;
     private Double price;
     private LocalDate expirationDate; // 'yyyy-MM-dd' 형식
-    private String category;
 
     public Coupon toEntity(User user, Item item, LocalDateTime now) {
         return Coupon.builder()
@@ -32,7 +31,6 @@ public class CouponCreateRequestDto {
                 .itemPrice(item.getPrice())
                 .remainingPrice(price)
                 .expirationDate(expirationDate)
-                .category(category)
                 .buyFlag(false)
                 .build();
     }

@@ -24,7 +24,6 @@ public class CouponDetailResponseDto {
     private Double price;
     private LocalDate expirationDate;
     private LocalDate usedDate;
-    private String category;
     private Boolean buyFlag;
 
     // TODO : Exception 처리
@@ -42,7 +41,6 @@ public class CouponDetailResponseDto {
                 .price(coupon.getRemainingPrice())
                 .expirationDate(coupon.getExpirationDate())
                 .usedDate(coupon.getUsedDate())
-                .category(coupon.getCategory())
                 .buyFlag(coupon.isBuyFlag())
                 .build();
     }

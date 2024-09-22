@@ -10,6 +10,7 @@ public class ItemSimpleResponseDto {
     private Long itemId;
     private String name;
     private String brand;
+    private String category;
     private String imageUrl;
 
     public static ItemSimpleResponseDto toDto(Item item, String imageUrl) {
@@ -17,6 +18,7 @@ public class ItemSimpleResponseDto {
                 .itemId(item.getId())
                 .name(item.getName())
                 .brand(item.getBrand())
+                .category(item.getCategory())
                 .imageUrl(imageUrl)
                 .build();
     }
