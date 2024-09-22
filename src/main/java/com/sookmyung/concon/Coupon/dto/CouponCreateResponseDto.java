@@ -27,7 +27,6 @@ public class CouponCreateResponseDto {
                 .item(item)
                 .expirationDate(coupon.getExpirationDate())
                 .price(coupon.getRemainingPrice())
-                .category(coupon.getCategory())
                 .isUsed(false)
                 .isBuyFlag(coupon.isBuyFlag())
                 .barcodeImageUploadUrl(barcodeImageUploadUrl)

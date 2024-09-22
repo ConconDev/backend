@@ -47,8 +47,6 @@ public class Coupon {
 
     private LocalDate usedDate;
 
-    private String category;
-
     @Setter
     private boolean buyFlag;   // 구매 여부
 

@@ -14,7 +14,6 @@ public class CouponSimpleResponseDto {
     private ItemSimpleResponseDto item;
     private LocalDate expirationDate;
     private Double price;
-    private String category;
     private boolean isUsed;
     private boolean isBuyFlag;
 
@@ -23,7 +22,6 @@ public class CouponSimpleResponseDto {
                 .couponId(coupon.getId())
                 .item(item)
                 .expirationDate(coupon.getExpirationDate())
-                .category(coupon.getCategory())
                 .price(coupon.getRemainingPrice())
                 .isUsed(isUsed)
                 .isBuyFlag(coupon.isBuyFlag())
