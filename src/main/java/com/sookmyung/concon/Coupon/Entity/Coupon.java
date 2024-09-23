@@ -61,8 +61,17 @@ public class Coupon {
 
     private String memo;
 
+    private String category;
+
     public void changeUser(User user) {
         this.user = user;
+    }
+
+    public void update(Double remainingPrice, LocalDate expirationDate, String memo, String category) {
+        this.remainingPrice = remainingPrice;
+        this.expirationDate = expirationDate;
+        this.memo = memo;
+        this.category = category;
     }
 
 }
