@@ -2,15 +2,11 @@ package com.sookmyung.concon.User.Jwt;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sookmyung.concon.KakaoLogin.dto.KakaoAccount;
-import com.sookmyung.concon.KakaoLogin.dto.KakaoUserInfoResponse;
-import com.sookmyung.concon.KakaoLogin.service.KakaoService;
 import com.sookmyung.concon.User.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,22 +1,25 @@
 package com.sookmyung.concon.User.service;
 
-import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
 import com.sookmyung.concon.Item.service.ItemService;
+import com.sookmyung.concon.Kakao.dto.KakaoTokenResponse;
+import com.sookmyung.concon.Kakao.dto.KakaoUnlinkResponse;
+import com.sookmyung.concon.Kakao.service.KakaoService;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.*;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 
 // tODO : paging 처리
@@ -29,6 +32,11 @@ public class UserServiceImpl implements UserService {
     private final ItemService itemService;
     private final PhotoManager photoManager;
     private final PhotoFacade photoFacade;
+    private final WebClient webClient;
+    private final KakaoService kakaoService;
+
+    @Value("${KAKAO_UNLINK_URI}")
+    private String UNLINK_URI;
 
     // 나의 정보 조회
     @Override
@@ -122,15 +130,5 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(0, 5);
         List<User> randomUsers = userRepository.findRandomUsersByCategory(category, pageable);
         return orderUserFacade.toUserDetailResponseDtos(randomUsers);
-    }
-
-
-
-    // 회원 탈퇴
-    @Override
-    @Transactional
-    public void deleteUser(String token) {
-        User user = orderUserFacade.findUserByToken(token);
-        userRepository.delete(user);
     }
 }

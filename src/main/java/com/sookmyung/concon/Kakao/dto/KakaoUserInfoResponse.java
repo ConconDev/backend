@@ -1,4 +1,4 @@
-package com.sookmyung.concon.KakaoLogin.dto;
+package com.sookmyung.concon.Kakao.dto;
 
 import lombok.Data;
 

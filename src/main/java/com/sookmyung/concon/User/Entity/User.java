@@ -54,7 +54,7 @@ public class User {
     @OneToMany(mappedBy = "seller")
     private List<Orders> orders;
 
-
+    // 카카오 로그인 되어있는가!
     public void updateVerifiedStatus(boolean verified) {
         is_verified = verified;
     }
