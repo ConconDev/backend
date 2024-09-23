@@ -1,6 +1,5 @@
 package com.sookmyung.concon.configuration;
 
-import com.sookmyung.concon.KakaoLogin.service.KakaoService;
 import com.sookmyung.concon.User.Jwt.JwtFilter;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.Jwt.LoginFilter;
@@ -60,7 +59,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/api/auth/**", "/swagger-ui/**", "/api-docs/**",
                                 "/swagger-ui.html", "/api/test", "/ping", "/api/import-csv",
-                                "/api/kakao", "/api/kakao/**", "/loginForm").permitAll()
+                                "/kakao", "/api/kakao/*", "/loginForm").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated());

@@ -107,6 +107,18 @@ public class OrderServiceImpl implements OrderService{
         return orderUserFacade.toOrderSimpleDtoList(orders);
     }
 
+    // 상품 구매
+    public void buyOrder(Long orderId, String token) {
+        User buyer = orderUserFacade.findUserByToken(token);
+        Orders order = orderFacade.findOrdersById(orderId);
+
+
+    }
+
+    public void buyRedirect() {
+
+    }
+
     // 거래 삭제
     @Transactional
     public void deleteOrder(Long orderId) {

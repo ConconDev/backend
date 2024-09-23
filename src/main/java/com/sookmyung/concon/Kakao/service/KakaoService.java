@@ -1,22 +1,22 @@
-package com.sookmyung.concon.KakaoLogin.service;
+package com.sookmyung.concon.Kakao.service;
 
-import com.sookmyung.concon.KakaoLogin.dto.KakaoTokenResponse;
-import com.sookmyung.concon.KakaoLogin.dto.KakaoUserInfoResponse;
+import com.sookmyung.concon.Kakao.dto.KakaoTokenResponse;
+import com.sookmyung.concon.Kakao.dto.KakaoUserInfoResponse;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.LoginRequestDto;
 import com.sookmyung.concon.User.dto.UserCreateRequestDto;
 import com.sookmyung.concon.User.repository.UserRepository;
-import com.sookmyung.concon.User.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoService {
@@ -40,18 +40,30 @@ public class KakaoService {
     @Value("${KAKAO_USER_INFO_URI}")
     private String USER_INFO_URI;
 
+    public String getCode() {
+        String uri = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" +
+                CLIENT_ID + "&redirect_uri=" + REDIRECT_URI;
+
+        Flux<String> response = webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToFlux(String.class);
+
+        return response.blockFirst();
+    }
+
     public KakaoTokenResponse getToken(String code) {
         String uri = KAKAO_TOKEN_URI + "?grant_type=" + GRANT_TYPE + "&client_id=" + CLIENT_ID
                 + "&redirect_uri=" + REDIRECT_URI + "&code=" + code;
         System.out.println(uri);
-
-        Flux<KakaoTokenResponse> responsse = webClient.post()
+        log.info("getToken code:" + code);
+        Flux<KakaoTokenResponse> response = webClient.post()
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(KakaoTokenResponse.class);
 
-        return responsse.blockFirst();
+        return response.blockFirst();
     }
 
     public KakaoUserInfoResponse getUserInfo(String token) {
@@ -66,8 +78,9 @@ public class KakaoService {
     }
 
     @Transactional
-    public LoginRequestDto kakaoLogin(String code) {
-        KakaoTokenResponse kakaoTokenResponse = getToken(code);
+    public LoginRequestDto kakaoLogin(KakaoTokenResponse kakaoTokenResponse) {
+
+        log.info("kakaoLogin의 토큰 받기 " + kakaoTokenResponse.getAccess_token());
         KakaoUserInfoResponse userInfo = getUserInfo(kakaoTokenResponse.getAccess_token());
 
         String email = userInfo.getKakao_account().getEmail();
@@ -82,11 +95,12 @@ public class KakaoService {
                 .password(password)
                 .build();
     }
+
     public Long join(UserCreateRequestDto request) {
         if (userRepository.existsUserByEmail(request.getEmail())) {
             return null;
         }
-        User user = request.toEntity(bCryptPasswordEncoder.encode(request.getPassword()));
+        User user = request.toKakaoEntity(bCryptPasswordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
         return user.getId();

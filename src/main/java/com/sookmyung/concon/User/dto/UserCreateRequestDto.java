@@ -25,4 +25,18 @@ public class UserCreateRequestDto {
                 .is_verified(false)
                 .build();
     }
+
+    public User toKakaoEntity(String password) {
+        return User.builder()
+                .email(email)
+                .username("username")
+                .password(password)
+                .role(RoleType.USER)
+                .color("0xff848484")
+                .gift_notify(false)
+                .expiry_notify(false)
+                .expiry_days(7)
+                .is_verified(true)
+                .build();
+    }
 }
