@@ -44,6 +44,12 @@ public class FriendService {
     public Long createFriendRequest(String token, Long friendId) {
         User sender = orderUserFacade.findUserByToken(token);
         User receiver = orderUserFacade.findUserById(friendId);
+
+        // 중복 요청 제거
+        if (friendshipRepository.existsBySenderAndReceiver(sender, receiver)) {
+            throw new IllegalArgumentException("이미 친구 요청을 보냈습니다. ");
+        }
+
         Friendship friendship = Friendship.builder()
                 .sender(sender)
                 .receiver(receiver)
