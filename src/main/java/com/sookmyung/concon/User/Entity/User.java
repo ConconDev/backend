@@ -4,10 +4,7 @@ import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Photo.dto.PhotoDto;
 import com.sookmyung.concon.User.dto.UserModifyRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,11 +51,19 @@ public class User {
     @OneToMany(mappedBy = "seller")
     private List<Orders> orders;
 
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private LoginType loginType;
+
+    @Setter
+    private String refreshToken;
+
+    private String payRefreshToken;
+
     // 카카오 로그인 되어있는가!
     public void updateVerifiedStatus(boolean verified) {
         is_verified = verified;
     }
-
 
     public void update(UserModifyRequestDto request) {
         this.username = request.getUsername();

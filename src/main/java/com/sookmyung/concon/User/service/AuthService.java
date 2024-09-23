@@ -2,6 +2,7 @@ package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.Kakao.dto.KakaoTokenResponse;
 import com.sookmyung.concon.Kakao.service.KakaoService;
+import com.sookmyung.concon.User.Entity.LoginType;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.LoginRequestDto;
 import com.sookmyung.concon.User.dto.LoginResponseDto;
@@ -56,6 +57,7 @@ public class AuthService {
             throw new IllegalArgumentException("이메일이 중복되었습니다. ");
         }
         User user = request.toEntity(bCryptPasswordEncoder.encode(request.getPassword()));
+        user.setLoginType(LoginType.REGULAR);
 
         userRepository.save(user);
         return user.getId();
@@ -68,7 +70,7 @@ public class AuthService {
                 .build();
         String uri = origins[0] + "/api/auth/login";
         System.out.println(uri);
-        Optional<LoginResponseDto> authorization = webClient.post()
+        Optional<LoginResponseDto> loginResponse = webClient.post()
                 .uri(origins[0] + "/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(request))
@@ -82,9 +84,17 @@ public class AuthService {
                 })
                 .blockOptional();
 
-        if (authorization.isPresent()) {
+        if (loginResponse.isPresent()) {
             log.info("로그인 성공!!!!!!");
-            return authorization.get();
+
+            LoginResponseDto response = loginResponse.get();
+            User user = userRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+            String refreshToken = response.getKakaoTokenResponse().getRefresh_token();
+            if (!user.getRefreshToken().equals(refreshToken)) {
+                user.setRefreshToken(refreshToken);
+            }
+
+            return loginResponse.get();
         } else {
             throw new IllegalArgumentException("로그인 실패");
         }

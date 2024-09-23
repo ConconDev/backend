@@ -33,34 +33,6 @@ public class AuthController {
         return ResponseEntity.ok("JWT Token");
     }
 
-//    @Operation(summary = "카카오 로그인")
-//    @PostMapping("/kakao/login")
-//    public ResponseEntity<String> kakaoLogin(
-//            @RequestParam("email") String email,
-//            @RequestParam("password") String password) {
-//
-//        log.info("/kakao/login 리다이랙트는 성공");
-//        String redirectUrl = UriComponentsBuilder.fromPath("/api/auth/kakao/login")
-//                .queryParam("email", email)
-//                .queryParam("password", password)
-//                .toUriString();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Location", redirectUrl);
-//
-//        return new ResponseEntity<>(headers, HttpStatus.FOUND);
-//    }
-
-//    @Operation(summary = "카카오 로그인")
-//    @PostMapping("/kakao/login")
-//    public ResponseEntity<?> kakaoLogin(
-//            @RequestParam("email") String email,
-//            @RequestParam("password") String password) {
-//
-//        LoginResponseDto login = authService.login(email, password);
-//
-//        return ResponseEntity.ok(login);
-//    }
 
     @Operation(summary = "카카오 로그인")
     @GetMapping("/kakao/callback")

@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.repository.ItemRepository;
+import com.sookmyung.concon.Item.service.itemMapper.StarbucksItemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
