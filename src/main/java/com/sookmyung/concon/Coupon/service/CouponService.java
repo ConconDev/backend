@@ -9,6 +9,8 @@ import com.sookmyung.concon.Item.repository.ItemRepository;
 import com.sookmyung.concon.Item.service.ItemFacade;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
+import com.sookmyung.concon.Review.entity.Review;
+import com.sookmyung.concon.Review.repository.ReviewRepository;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
@@ -34,6 +36,7 @@ public class CouponService {
     private final CouponFacade couponFacade;
     private final PhotoFacade photoFacade;
     private final UserFacade userFacade;
+    private final ReviewRepository reviewRepository;
 
 
     // 쿠폰 생성
@@ -106,6 +109,7 @@ public class CouponService {
         if (!couponRepository.existsById(couponId)) {
             throw new IllegalArgumentException("Invalid coupon ID");
         }
+        reviewRepository.findFirstByCouponId(couponId).ifPresent(reviewRepository::delete);
         couponRepository.deleteById(couponId);
     }
 

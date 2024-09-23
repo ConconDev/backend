@@ -21,6 +21,7 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    // TODO : Coupon -> Item 으로 변경할 것
     @OneToOne(fetch = FetchType.LAZY)
     private Coupon coupon;
 
