@@ -8,6 +8,7 @@ import com.sookmyung.concon.Photo.service.PhotoManager;
 import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
@@ -55,8 +57,7 @@ public class ItemService {
     // 카테고리로 아이템 조회
     @Transactional(readOnly = true)
     public List<ItemSimpleResponseDto> getItemByCategory(String category) {
-        List<Item> item = itemFacade.findItemsByCategory(category);
-        return item.stream().map(itemFacade::toSimpleDto).toList();
+        return itemFacade.findItemsByCategory(category);
     }
 
     // 아이템 저장 (test 용)
@@ -73,14 +74,12 @@ public class ItemService {
 
     // 동영상 저장
     @Transactional
-    public ItemVideoCreateResponseDto updateVideoUrl(ItemVideoCreateRequestDto request) {
+    public ItemDetailResponseDto updateVideoUrl(ItemVideoCreateRequestDto request) {
         Item item = itemFacade.findItemById(request.getItemId());
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-        item.updateVideo(request.getVideoName(), now);
+        item.updateVideo(request.getVideoUrl());
 
-        return ItemVideoCreateResponseDto.toDto(item,
-                photoFacade.uploadItemVideo(item, request.getVideoName(), now));
+        return itemFacade.toDetailDto(item);
     }
 
     // 아이템 삭제 (test 용)

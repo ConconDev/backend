@@ -6,12 +6,14 @@ import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import com.sookmyung.concon.Item.repository.ItemRepository;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemFacade {
     private final ItemRepository itemRepository;
     private final PhotoFacade photoFacade;
@@ -26,8 +28,10 @@ public class ItemFacade {
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이템을 조회할 수 없습니다. "));
     }
 
-    public List<Item> findItemsByCategory(String category) {
-        return itemRepository.findByCategory(category);
+    public List<ItemSimpleResponseDto> findItemsByCategory(String category) {
+        List<Item> byCategory = itemRepository.findByCategoryContaining(category);
+        log.info("1번 아이템 조회" + byCategory.size());
+        return byCategory.stream().map(this::toSimpleDto).toList();
     }
 
     public ItemSimpleResponseDto toSimpleDto(Item item) {
@@ -37,7 +41,6 @@ public class ItemFacade {
 
     public ItemDetailResponseDto toDetailDto(Item item) {
         String itemImageUrl = photoFacade.getItemPhotoUrl(item);
-        String itemVideoUrl = photoFacade.getItemVideoUrl(item);
-        return ItemDetailResponseDto.toDto(item, itemImageUrl, itemVideoUrl);
+        return ItemDetailResponseDto.toDto(item, itemImageUrl);
     }
 }

@@ -75,13 +75,4 @@ public class UserController {
             @RequestBody UserModifyRequestDto request) {
         return ResponseEntity.ok(userService.modifyUser(token, request));
     }
-
-    // 회원 탈퇴
-    @Operation(summary = "회원 탈퇴")
-    @DeleteMapping
-    public ResponseEntity<Object> deleteUser(
-            @RequestHeader("Authorization") String token) {
-        userService.deleteUser(token);
-        return ResponseEntity.noContent().build();
-    }
 }

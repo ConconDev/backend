@@ -16,7 +16,7 @@ public class ItemDetailResponseDto {
     private String videoUrl;
     private String category;
 
-    public static ItemDetailResponseDto toDto(Item item, String imageUrl, String videoUrl) {
+    public static ItemDetailResponseDto toDto(Item item, String imageUrl) {
         return ItemDetailResponseDto.builder()
                 .itemId(item.getId())
                 .name(item.getName())
@@ -24,7 +24,7 @@ public class ItemDetailResponseDto {
                 .description(item.getDescription())
                 .brand(item.getBrand())
                 .imageUrl(imageUrl)
-                .videoUrl(videoUrl)
+                .videoUrl(item.getVideoUrl())
                 .category(item.getCategory())
                 .build();
     }

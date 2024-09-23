@@ -24,7 +24,6 @@ public class CouponDetailResponseDto {
     private Double price;
     private LocalDate expirationDate;
     private LocalDate usedDate;
-    private String category;
     private Boolean buyFlag;
     private String memo;
 
@@ -43,7 +42,6 @@ public class CouponDetailResponseDto {
                 .price(coupon.getRemainingPrice())
                 .expirationDate(coupon.getExpirationDate())
                 .usedDate(coupon.getUsedDate())
-                .category(coupon.getCategory())
                 .buyFlag(coupon.isBuyFlag())
                 .memo(coupon.getMemo())
                 .build();

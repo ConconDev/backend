@@ -32,11 +32,18 @@ public class Item {
 
     private String imageUrl;
 
-    private String videoName;
-    private LocalDateTime videoCreatedDate;
+//    private String videoName;
+//    private LocalDateTime videoCreatedDate;
 
-    public void updateVideo(String videoName, LocalDateTime videoCreatedDate) {
-        this.videoName = videoName;
-        this.videoCreatedDate = videoCreatedDate;
+//    public void updateVideo(String videoName, LocalDateTime videoCreatedDate) {
+//        this.videoName = videoName;
+//        this.videoCreatedDate = videoCreatedDate;
+//    }
+
+    private String videoUrl;
+
+    public void updateVideo(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 }
+

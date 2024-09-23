@@ -44,11 +44,17 @@ public class Coupon {
     private Double itemPrice;
     private Double remainingPrice;
 
+    public void changeRemainingPrice(Double remainingPrice) {
+        this.remainingPrice = remainingPrice;
+    }
+
     private LocalDate expirationDate;
 
     private LocalDate usedDate;
 
-    private String category;
+    public void useCoupon(LocalDate useDate) {
+        this.usedDate = useDate;
+    }
 
     @Setter
     private boolean buyFlag;   // 구매 여부

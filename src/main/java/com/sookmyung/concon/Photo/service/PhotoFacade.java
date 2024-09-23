@@ -48,9 +48,6 @@ public class PhotoFacade {
 //        return photoService.getPhoto(ITEM_PREFIX + item.getId() + item.getImagePath());
         return item.getImageUrl();
     }
-    public String getItemVideoUrl(Item item) {
-        return photoManager.getPhoto(ITEM_PREFIX + item.getId(), item.getVideoName(), item.getVideoCreatedDate());
-    }
 
     public String getCouponPhotoUrl(Coupon coupon) {
         return photoManager.getPhoto(COUPON_PREFIX + coupon.getId(), coupon.getImageFileName(), coupon.getImageCreateDate());

@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class ItemVideoCreateRequestDto {
     private Long itemId;
-    private String videoName;
+    private String videoUrl;
 }
