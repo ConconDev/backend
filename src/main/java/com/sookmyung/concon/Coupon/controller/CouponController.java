@@ -70,7 +70,7 @@ public class CouponController {
     }
 
     @Operation(summary = "쿠폰 수정")
-    @PutMapping("/{coupon-id}")
+    @PutMapping("/modify")
     public ResponseEntity<CouponDetailResponseDto> updateCoupon(
             @RequestBody CouponModifyRequestDto request) {
         return ResponseEntity.ok(couponService.updateCoupon(request));

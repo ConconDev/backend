@@ -34,8 +34,9 @@ public class Coupon {
     private String barcodeImageFileName;
     private LocalDateTime barcodeImageCreatedDate;
 
+
     // 아이템 사진
-    private String itemImagePath;
+    private String itemImageUrl;
 
     // 쿠폰 사진
     private String imageFileName;
@@ -66,10 +67,16 @@ public class Coupon {
         this.user = user;
     }
 
-    public void update(Double remainingPrice, LocalDate expirationDate, String memo) {
+    public void update(String barcode, Double remainingPrice,
+                       LocalDate expirationDate, String memo,
+                       Item item, String itemImagePath, Double itemPrice) {
+        this.barcode = barcode;
         this.remainingPrice = remainingPrice;
         this.expirationDate = expirationDate;
         this.memo = memo;
+        this.item = item;
+        this.itemImageUrl = itemImagePath;
+        this.itemPrice = itemPrice;
     }
 
 }

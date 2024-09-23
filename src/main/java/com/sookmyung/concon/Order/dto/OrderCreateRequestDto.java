@@ -16,7 +16,7 @@ public class OrderCreateRequestDto {
     public Orders toEntity(Coupon coupon, User seller) {
         return Orders.builder()
                 .coupon(coupon)
-                .itemPhotoPath(coupon.getItemImagePath())
+                .itemPhotoUrl(coupon.getItemImageUrl())
                 .seller(seller)
                 .createdDate(LocalDate.now())
                 .status(OrderStatus.AVAILABLE)
