@@ -38,4 +38,8 @@ public class JwtUtil {
                 .compact();
 
     }
+
+    public String getUserId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", String.class);
+    }
 }

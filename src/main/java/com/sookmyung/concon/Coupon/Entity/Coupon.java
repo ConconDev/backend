@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 public class Coupon {
 
     @Id
@@ -58,8 +59,19 @@ public class Coupon {
     @Setter
     private boolean buyFlag;   // 구매 여부
 
+    private String memo;
+
+    private String category;
+
     public void changeUser(User user) {
         this.user = user;
+    }
+
+    public void update(Double remainingPrice, LocalDate expirationDate, String memo, String category) {
+        this.remainingPrice = remainingPrice;
+        this.expirationDate = expirationDate;
+        this.memo = memo;
+        this.category = category;
     }
 
 }

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewRequest {
     private Long itemId;
-    private Long userId;
     private double score;
     private String content;
 }

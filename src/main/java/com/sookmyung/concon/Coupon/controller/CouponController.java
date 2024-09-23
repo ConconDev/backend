@@ -67,4 +67,13 @@ public class CouponController {
     public ResponseEntity<?> remainCouponPrice(CouponChangePriceRequestDto request) {
         return ResponseEntity.ok(couponService.changeRemainPrice(request));
     }
+
+    @Operation(summary = "쿠폰 수정")
+    @PutMapping("/{coupon-id}")
+    public ResponseEntity<CouponDetailResponseDto> updateCoupon(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("coupon-id") Long couponId,
+            @RequestBody CouponCreateRequestDto request) {
+        return ResponseEntity.ok(couponService.updateCoupon(token, couponId, request));
+    }
 }

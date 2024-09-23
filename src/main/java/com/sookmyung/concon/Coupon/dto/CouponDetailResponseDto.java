@@ -25,6 +25,7 @@ public class CouponDetailResponseDto {
     private LocalDate expirationDate;
     private LocalDate usedDate;
     private Boolean buyFlag;
+    private String memo;
 
     // TODO : Exception 처리
     public static CouponDetailResponseDto toDto(Coupon coupon, UserSimpleResponseDto user,
@@ -42,6 +43,7 @@ public class CouponDetailResponseDto {
                 .expirationDate(coupon.getExpirationDate())
                 .usedDate(coupon.getUsedDate())
                 .buyFlag(coupon.isBuyFlag())
+                .memo(coupon.getMemo())
                 .build();
     }
 

@@ -108,4 +108,22 @@ public class CouponService {
         }
         couponRepository.deleteById(couponId);
     }
+
+    // 쿠폰 정보 수정 메서드
+    @Transactional
+    public CouponDetailResponseDto updateCoupon(String token, Long couponId, CouponCreateRequestDto request) {
+        User user = orderUserFacade.findUserByToken(token);
+        Coupon coupon = couponFacade.findByCouponId(couponId);
+
+        if (!coupon.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("해당 쿠폰을 수정할 권한이 없습니다.");
+        }
+
+        Item item = itemFacade.findItemById(request.getItemId());
+        coupon.update(request.getPrice(), request.getExpirationDate(), request.getMemo(), item.getCategory());
+        couponRepository.save(coupon);
+
+        return couponFacade.toDetailDto(coupon, user, coupon.getItem());
+    }
+
 }

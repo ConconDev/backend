@@ -23,12 +23,13 @@ public class ReviewService {
     @Autowired
     private RedisTemplate<String, Review> redisTemplate;
 
+
     // 후기 작성
     @Async
-    public void createReview(ReviewRequest reviewRequest) {
+    public void createReview(ReviewRequest reviewRequest, Long userId) {
         // ReviewRequest에서 엔티티 생성
         Review review = Review.builder()
-                .userId(reviewRequest.getUserId())
+                .userId(userId)
                 .itemId(reviewRequest.getItemId())
                 .score(reviewRequest.getScore())
                 .content(reviewRequest.getContent())

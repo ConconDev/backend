@@ -7,11 +7,14 @@ import com.sookmyung.concon.Review.dto.ReviewUpdateRequest;
 import com.sookmyung.concon.Review.entity.Review;
 import com.sookmyung.concon.Review.service.ReviewService;
 import com.sookmyung.concon.User.Entity.User;
+import com.sookmyung.concon.User.Jwt.JwtUtil;
 import com.sookmyung.concon.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +28,17 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Operation(summary = "후기 작성")
     @PostMapping
     public ResponseEntity<Void> createReview(@RequestBody ReviewRequest reviewRequest) {
-        reviewService.createReview(reviewRequest);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String token = auth.getName();
+        String userId = jwtUtil.getUserId(token);
+
+        reviewService.createReview(reviewRequest, Long.parseLong(userId));
         return ResponseEntity.ok().build();
     }
 
