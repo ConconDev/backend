@@ -144,13 +144,17 @@ public class TransactionService {
         order.updateStatus(OrderStatus.COMPLETED);
         order.setTransactionDate(LocalDate.now());
 
+        User seller = order.getSeller();
+
+
+
         Coupon coupon = order.getCoupon();
         coupon.changeUser(order.getBuyer());
         coupon.setBuyFlag(true);
 
         // 구매자에게 알람
         OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, order.getBuyer());
-        eventPublisher.publishEvent(order.getBuyer().getId(), ORDER_COMPLETED, response);
+        eventPublisher.publishEvent(seller.getId(), ORDER_COMPLETED, response);
 
         return "200 OK";
     }

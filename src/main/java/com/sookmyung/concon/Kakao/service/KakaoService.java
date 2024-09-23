@@ -2,6 +2,7 @@ package com.sookmyung.concon.Kakao.service;
 
 import com.sookmyung.concon.Kakao.dto.KakaoTokenResponse;
 import com.sookmyung.concon.Kakao.dto.KakaoUserInfoResponse;
+import com.sookmyung.concon.User.Entity.LoginType;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.LoginRequestDto;
 import com.sookmyung.concon.User.dto.UserCreateRequestDto;
@@ -101,6 +102,7 @@ public class KakaoService {
             return null;
         }
         User user = request.toKakaoEntity(bCryptPasswordEncoder.encode(request.getPassword()));
+        user.setLoginType(LoginType.KAKAO);
 
         userRepository.save(user);
         return user.getId();
