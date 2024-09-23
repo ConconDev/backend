@@ -38,14 +38,14 @@ public class AuthService {
     @Value("${KAKAO_UNLINK_URI}")
     private String UNLINK_URI;
 
-    @Value("${KAKAO_CLIENT_ID}")
-    private String CLIENT_ID;
-
-    @Value("${KAKAO_REDIRECT_URI}")
-    private String REDIRECT_URI;
-
-    @Value("${KAKAO_LOGOUT_REDIRECT_URI}")
-    private String REDIRECT_LOGOUT_URI;
+//    @Value("${KAKAO_CLIENT_ID}")
+//    private String CLIENT_ID;
+//
+//    @Value("${KAKAO_REDIRECT_URI}")
+//    private String REDIRECT_URI;
+//
+//    @Value("${KAKAO_LOGOUT_REDIRECT_URI}")
+//    private String REDIRECT_LOGOUT_URI;
 
     @Value("${allowed.origins}")
     private String[] origins;
