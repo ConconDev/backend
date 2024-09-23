@@ -1,6 +1,7 @@
 package com.sookmyung.concon.User.dto;
 
 import com.sookmyung.concon.Order.dto.OrderSimpleResponseDto;
+import com.sookmyung.concon.Review.dto.ReviewSimpleResponseDto;
 import com.sookmyung.concon.Review.entity.Review;
 import com.sookmyung.concon.User.Entity.User;
 import lombok.Builder;
@@ -19,18 +20,13 @@ public class UserDetailResponseDto {
     private String color;
     private List<OrderSimpleResponseDto> orders;
 
-    //TODO : 리뷰 추가
-    private List<Review> reviews;
-
-    public static UserDetailResponseDto toDto(User user, List<OrderSimpleResponseDto> orders, List<Review> reviews, String profileUrl) {
-        log.debug("Reviews in toDto: {}", reviews);
+    public static UserDetailResponseDto toDto(User user, List<OrderSimpleResponseDto> orders, String profileUrl) {
         return UserDetailResponseDto.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .profileUrl(profileUrl)
                 .color(user.getColor())
                 .orders(orders)
-                .reviews(reviews)
                 .build();
     }
 }

@@ -8,12 +8,16 @@ import com.sookmyung.concon.Coupon.repository.CouponRepository;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
+import com.sookmyung.concon.Review.dto.ReviewSimpleResponseDto;
+import com.sookmyung.concon.Review.repository.ReviewRepository;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,14 +25,17 @@ public class CouponFacade {
 
     private final PhotoFacade photoFacade;
     private final CouponRepository couponRepository;
+    private final ReviewRepository reviewRepository;
 
     public CouponDetailResponseDto toDetailDto(Coupon coupon, User user, Item item) {
         String couponImageUrl = photoFacade.getCouponPhotoUrl(coupon);
         String barcodeImageUrl = photoFacade.getCouponBarcodePhotoUrl(coupon);
         UserSimpleResponseDto userDto = UserSimpleResponseDto.toDto(user, photoFacade.getUserPhotoUrl(user));
         ItemSimpleResponseDto itemDto = ItemSimpleResponseDto.toDto(item, photoFacade.getItemPhotoUrl(item));
+        List<ReviewSimpleResponseDto> reviews = reviewRepository.findAllByItemId(item.getId(), PageRequest.of(0, 10))
+                .stream().map(ReviewSimpleResponseDto::toDto).toList();
 
-        return CouponDetailResponseDto.toDto(coupon, userDto, itemDto, barcodeImageUrl, couponImageUrl);
+        return CouponDetailResponseDto.toDto(coupon, userDto, itemDto, barcodeImageUrl, couponImageUrl, reviews);
     }
 
     public CouponSimpleResponseDto toSimpleDto(Coupon coupon) {

@@ -1,5 +1,6 @@
 package com.sookmyung.concon.Review.entity;
 
+import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.User.Entity.User;
 import jakarta.persistence.*;
@@ -15,13 +16,20 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
-    private Long reviewId;
+    private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-    private Long itemId;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Coupon coupon;
 
     private double score;
 
     private String content;
+
+    public void update(double score, String content) {
+        this.score = score;
+        this.content = content;
+    }
 }

@@ -5,8 +5,11 @@ import com.sookmyung.concon.Item.dto.ItemDetailResponseDto;
 import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import com.sookmyung.concon.Item.repository.ItemRepository;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
+import com.sookmyung.concon.Review.dto.ReviewSimpleResponseDto;
+import com.sookmyung.concon.Review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 public class ItemFacade {
     private final ItemRepository itemRepository;
     private final PhotoFacade photoFacade;
+    private final ReviewRepository reviewRepository;
 
     public Item findItemById(Long itemId) {
         return itemRepository.findById(itemId)
@@ -41,6 +45,8 @@ public class ItemFacade {
 
     public ItemDetailResponseDto toDetailDto(Item item) {
         String itemImageUrl = photoFacade.getItemPhotoUrl(item);
-        return ItemDetailResponseDto.toDto(item, itemImageUrl);
+        List<ReviewSimpleResponseDto> reviews = reviewRepository.findAllByItemId(item.getId(), PageRequest.of(0, 10))
+                .stream().map(ReviewSimpleResponseDto::toDto).toList();
+        return ItemDetailResponseDto.toDto(item, itemImageUrl, reviews);
     }
 }
