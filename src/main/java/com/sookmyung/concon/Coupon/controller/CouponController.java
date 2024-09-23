@@ -64,16 +64,15 @@ public class CouponController {
 
     @Operation(summary = "잔여 가격 수정")
     @PostMapping("/remain-price")
-    public ResponseEntity<?> remainCouponPrice(CouponChangePriceRequestDto request) {
+    public ResponseEntity<?> remainCouponPrice(
+            @RequestBody CouponChangePriceRequestDto request) {
         return ResponseEntity.ok(couponService.changeRemainPrice(request));
     }
 
     @Operation(summary = "쿠폰 수정")
     @PutMapping("/{coupon-id}")
     public ResponseEntity<CouponDetailResponseDto> updateCoupon(
-            @RequestHeader("Authorization") String token,
-            @PathVariable("coupon-id") Long couponId,
-            @RequestBody CouponCreateRequestDto request) {
-        return ResponseEntity.ok(couponService.updateCoupon(token, couponId, request));
+            @RequestBody CouponModifyRequestDto request) {
+        return ResponseEntity.ok(couponService.updateCoupon(request));
     }
 }
