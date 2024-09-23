@@ -26,7 +26,7 @@ public class CouponCreateRequestDto {
                 .barcode(barcode)
                 .barcodeImageFileName(barcodeImageName)
                 .barcodeImageCreatedDate(now)
-                .itemImagePath(item.getImageUrl())
+                .itemImageUrl(item.getImageUrl())
                 .imageFileName(imageFileName)
                 .imageCreateDate(now)
                 .itemPrice(item.getPrice())

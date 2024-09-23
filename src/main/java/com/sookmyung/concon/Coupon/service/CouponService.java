@@ -113,9 +113,13 @@ public class CouponService {
     @Transactional
     public CouponDetailResponseDto updateCoupon(CouponModifyRequestDto request) {
         Coupon coupon = couponFacade.findByCouponId(request.getCouponId());
+        Item item = itemFacade.findItemById(request.getItemId());
 
 
-        coupon.update(request.getPrice(), request.getExpireDate(), request.getMemo());
+        coupon.update(request.getBarcode(), request.getPrice(),
+                request.getExpireDate(), request.getMemo(),
+                item, item.getImageUrl(), item.getPrice());
+
         couponRepository.save(coupon);
 
         return couponFacade.toDetailDto(coupon, coupon.getUser(), coupon.getItem());

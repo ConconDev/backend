@@ -26,7 +26,7 @@ public class Orders {
 
     // 아이템 이미지
     // 자주 조회되므로 필드로 저장
-    private String itemPhotoPath;
+    private String itemPhotoUrl;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
