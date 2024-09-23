@@ -3,6 +3,7 @@ package com.sookmyung.concon.User.controller;
 import com.sookmyung.concon.Kakao.dto.KakaoTokenResponse;
 import com.sookmyung.concon.Kakao.service.KakaoService;
 import com.sookmyung.concon.User.dto.LoginRequestDto;
+import com.sookmyung.concon.User.dto.LoginResponseDto;
 import com.sookmyung.concon.User.dto.UserCreateRequestDto;
 import com.sookmyung.concon.User.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,53 +33,46 @@ public class AuthController {
         return ResponseEntity.ok("JWT Token");
     }
 
-    @Operation(summary = "카카오 로그인")
-    @PostMapping("/kakao/login")
-    public ResponseEntity<String> kakaoLogin(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password) {
+//    @Operation(summary = "카카오 로그인")
+//    @PostMapping("/kakao/login")
+//    public ResponseEntity<String> kakaoLogin(
+//            @RequestParam("email") String email,
+//            @RequestParam("password") String password) {
+//
+//        log.info("/kakao/login 리다이랙트는 성공");
+//        String redirectUrl = UriComponentsBuilder.fromPath("/api/auth/kakao/login")
+//                .queryParam("email", email)
+//                .queryParam("password", password)
+//                .toUriString();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Location", redirectUrl);
+//
+//        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+//    }
 
-        log.info("/kakao/login 리다이랙트는 성공");
-        String redirectUrl = UriComponentsBuilder.fromPath("/api/auth/kakao/login")
-                .queryParam("email", email)
-                .queryParam("password", password)
-                .toUriString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", redirectUrl);
-
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
-    }
+//    @Operation(summary = "카카오 로그인")
+//    @PostMapping("/kakao/login")
+//    public ResponseEntity<?> kakaoLogin(
+//            @RequestParam("email") String email,
+//            @RequestParam("password") String password) {
+//
+//        LoginResponseDto login = authService.login(email, password);
+//
+//        return ResponseEntity.ok(login);
+//    }
 
     @Operation(summary = "카카오 로그인")
     @GetMapping("/kakao/callback")
-    public ResponseEntity<LoginRequestDto> kakaoCallback(String code) {
+    public ResponseEntity<?> kakaoCallback(String code) {
         KakaoTokenResponse token = kakaoService.getToken(code);
         LoginRequestDto loginRequestDto = kakaoService.kakaoLogin(token);
+        LoginResponseDto login = authService.login(token, loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
-        String redirectUrl = UriComponentsBuilder.fromPath("/api/auth/kakao/login")
-                .queryParam("email", loginRequestDto.getEmail())
-                .queryParam("password", loginRequestDto.getPassword())
-                .toUriString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", redirectUrl);
-
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + login.getToken())
+                .body(login);
     }
-//
-//    @Operation(summary = "카카오 콜백 함수")
-//    @GetMapping("/kakao/callback")
-//    public ResponseEntity<?> kakaoCallback(
-//            @RequestParam("code") String code) {
-//
-//        KakaoTokenResponse token = kakaoService.getToken(code);
-//        LoginRequestDto loginRequestDto = kakaoService.kakaoLogin(token);
-//        kakaoLogin(loginRequestDto.getEmail(), loginRequestDto.getPassword());
-//        log.info("로그인 성공");
-//
-//        return ResponseEntity.ok(token);
-//    }
 
 
     @Operation(summary = "로그아웃")
@@ -103,4 +97,9 @@ public class AuthController {
         authService.deleteUser(token);
         return ResponseEntity.noContent().build();
     }
+
+//    @Operation(summary = "카카오 회원 탈퇴 콜백 함수")
+//    public ResponseEntity<Object> deleteUserCallback() {
+//
+//    }
 }

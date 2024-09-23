@@ -69,7 +69,7 @@ public class SecurityConfig {
         // 현재 disable 되어있는 UsernamePasswordAuthenticationFilter 대신에 filter를 넣어줄 것이기 때문에 addFilterAt 사용
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),
-                        jwtUtil, "/api/auth/login", "/api/auth/kakao/login"),
+                        jwtUtil, "/api/auth/login"),
                         UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
