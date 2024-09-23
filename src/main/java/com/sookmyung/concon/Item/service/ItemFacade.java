@@ -41,7 +41,6 @@ public class ItemFacade {
 
     public ItemDetailResponseDto toDetailDto(Item item) {
         String itemImageUrl = photoFacade.getItemPhotoUrl(item);
-        String itemVideoUrl = photoFacade.getItemVideoUrl(item);
-        return ItemDetailResponseDto.toDto(item, itemImageUrl, itemVideoUrl);
+        return ItemDetailResponseDto.toDto(item, itemImageUrl);
     }
 }

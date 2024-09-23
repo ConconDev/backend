@@ -74,14 +74,12 @@ public class ItemService {
 
     // 동영상 저장
     @Transactional
-    public ItemVideoCreateResponseDto updateVideoUrl(ItemVideoCreateRequestDto request) {
+    public ItemDetailResponseDto updateVideoUrl(ItemVideoCreateRequestDto request) {
         Item item = itemFacade.findItemById(request.getItemId());
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-        item.updateVideo(request.getVideoName(), now);
+        item.updateVideo(request.getVideoUrl());
 
-        return ItemVideoCreateResponseDto.toDto(item,
-                photoFacade.uploadItemVideo(item, request.getVideoName(), now));
+        return itemFacade.toDetailDto(item);
     }
 
     // 아이템 삭제 (test 용)

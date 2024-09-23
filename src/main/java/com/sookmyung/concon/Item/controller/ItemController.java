@@ -69,7 +69,7 @@ public class ItemController {
 
     @Operation(summary = "item video 추가")
     @PostMapping("/video")
-    public ResponseEntity<ItemVideoCreateResponseDto> createItemVideo(
+    public ResponseEntity<?> createItemVideo(
             @RequestBody ItemVideoCreateRequestDto request) {
         return ResponseEntity.ok(itemService.updateVideoUrl(request));
     }
