@@ -1,10 +1,7 @@
 package com.sookmyung.concon.Coupon.service;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
-import com.sookmyung.concon.Coupon.dto.CouponCreateRequestDto;
-import com.sookmyung.concon.Coupon.dto.CouponCreateResponseDto;
-import com.sookmyung.concon.Coupon.dto.CouponDetailResponseDto;
-import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
+import com.sookmyung.concon.Coupon.dto.*;
 import com.sookmyung.concon.Coupon.repository.CouponRepository;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
@@ -22,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -76,6 +74,30 @@ public class CouponService {
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(() -> new IllegalArgumentException("Invalid coupon ID"));
         coupon.setBuyFlag(buyFlag);
         return couponRepository.save(coupon);
+    }
+
+    // 사용 완료
+    @Transactional
+    public CouponDetailResponseDto useCoupon(Long couponId) {
+        Coupon coupon = couponFacade.findByCouponId(couponId);
+        coupon.useCoupon(LocalDate.now());
+        return couponFacade.toDetailDto(coupon, coupon.getUser(), coupon.getItem());
+    }
+
+    // 사용 취소 테스트용
+    @Transactional
+    public CouponDetailResponseDto cancelCoupon(Long couponId) {
+        Coupon coupon = couponFacade.findByCouponId(couponId);
+        coupon.useCoupon(null);
+        return couponFacade.toDetailDto(coupon, coupon.getUser(), coupon.getItem());
+    }
+
+    @Transactional
+    public CouponDetailResponseDto changeRemainPrice(CouponChangePriceRequestDto request) {
+        Coupon coupon = couponFacade.findByCouponId(request.getCouponId());
+
+        coupon.changeRemainingPrice(request.getRemainPrice());
+        return couponFacade.toDetailDto(coupon, coupon.getUser(), coupon.getItem());
     }
 
     // 쿠폰 삭제 메서드
