@@ -1,18 +1,16 @@
-package com.sookmyung.concon.Item.service.itemMapper;
+package com.sookmyung.concon.Item.service.csv.itemMapper;
 
 import com.sookmyung.concon.Item.Entity.Item;
-import com.sookmyung.concon.Item.service.ItemMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CGVItemMapper implements ItemMapper {
-    @Override
+public class CGVItemMapper {
     public Item mapToUser(String[] lines) {
         return Item.builder()
                 .name(lines[0])
                 .price(Integer.parseInt(lines[1].replace(",", "")))
-                .imageUrl(lines[3])
-                .description(lines[5])
+                .imageUrl(lines[6])
+                .description(lines[5] + ", " + lines[2])
                 .brand("CGV")
                 .category("영화, 엔터테인먼트")
                 .build();

@@ -69,13 +69,13 @@ public class Coupon {
 
     public void update(String barcode, Double remainingPrice,
                        LocalDate expirationDate, String memo,
-                       Item item, String itemImagePath, Double itemPrice) {
+                       Item item, String itemImageUrl, Double itemPrice) {
         this.barcode = barcode;
         this.remainingPrice = remainingPrice;
         this.expirationDate = expirationDate;
         this.memo = memo;
         this.item = item;
-        this.itemImageUrl = itemImagePath;
+        this.itemImageUrl = itemImageUrl;
         this.itemPrice = itemPrice;
     }
 

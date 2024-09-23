@@ -1,12 +1,10 @@
-package com.sookmyung.concon.Item.service.itemMapper;
+package com.sookmyung.concon.Item.service.csv.itemMapper;
 
 import com.sookmyung.concon.Item.Entity.Item;
-import com.sookmyung.concon.Item.service.ItemMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StarbucksItemMapper implements ItemMapper {
-    @Override
+public class StarbucksItemMapper{
     public Item mapToUser(String[] lines) {
         return Item.builder()
                 .name(lines[1])
