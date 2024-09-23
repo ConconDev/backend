@@ -23,6 +23,7 @@ public class ReviewService {
     @Autowired
     private RedisTemplate<String, Review> redisTemplate;
 
+
     // 후기 작성
     @Async
     public void createReview(ReviewRequest reviewRequest, Long userId) {
