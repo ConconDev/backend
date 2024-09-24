@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public class FriendSimpleResponseDto {
     private Long friendshipId;
+    private Long userId;
     private String name;
     private String profileUrl;
     private FriendshipStatus statue;
@@ -17,6 +18,7 @@ public class FriendSimpleResponseDto {
     public static FriendSimpleResponseDto toDto(User user, String profileUrl, Friendship friendship) {
         return FriendSimpleResponseDto.builder()
                 .friendshipId(friendship.getId())
+                .userId(user.getId())
                 .name(user.getUsername())
                 .profileUrl(profileUrl)
                 .statue(friendship.getStatus())

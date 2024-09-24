@@ -33,7 +33,7 @@ public class OrderUserFacade {
     private final OrderFacade orderFacade;
     private final JwtUtil jwtUtil;
 
-    private final static String PREFIX = "item:";
+    private final static String PREFIX = "item/";
     private final PhotoManager photoManager;
 
 
@@ -69,7 +69,7 @@ public class OrderUserFacade {
                         orderRepository.findTop2BySellerOrderByCreatedDateDesc(user)
                                 .stream().map(orderFacade::toSimpleDto).toList();
 
-        String photoUrl = photoManager.getPhoto("user:" + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
+        String photoUrl = photoManager.getPhoto("user/" + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
         return UserDetailResponseDto.toDto(user, top2OrderByUser, photoUrl);
     }
 
