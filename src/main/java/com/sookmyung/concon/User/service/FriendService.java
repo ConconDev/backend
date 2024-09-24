@@ -23,7 +23,7 @@ public class FriendService {
     private final OrderUserFacade orderUserFacade;
     private final FriendshipRepository friendshipRepository;
 
-    private static final String PREFIX = "user:";
+    private static final String PREFIX = "user/";
     private final PhotoManager photoManager;
 
     private Friendship findFriendshipById(Long friendshipId) {
