@@ -15,6 +15,7 @@ public interface UserService {
     List<UserSimpleResponseDto> getUsersByKeyword(String keyword);
 
     UserModifyResponseDto modifyUser(String token, UserModifyRequestDto request);
+    UserQRImageModifyResponseDto modifyQRImage(String token, UserQRImageModifyRequestDto request);
 
     List<UserDetailResponseDto> get5RandomUser();
 

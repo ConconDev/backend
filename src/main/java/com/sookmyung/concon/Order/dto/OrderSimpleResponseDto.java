@@ -10,17 +10,20 @@ import lombok.Getter;
 @Builder
 @Getter
 public class OrderSimpleResponseDto {
-    private Long id;
+    private Long orderId;
     private CouponSimpleResponseDto coupon;
     private UserIdResponseDto seller;
+    private UserIdResponseDto buyer;
+
     private OrderStatus status;
 
     public static OrderSimpleResponseDto toDto(Orders orders, CouponSimpleResponseDto coupon,
-                                               UserIdResponseDto seller) {
+                                               UserIdResponseDto seller, UserIdResponseDto buyer) {
         return OrderSimpleResponseDto.builder()
-                .id(orders.getId())
+                .orderId(orders.getId())
                 .coupon(coupon)
                 .seller(seller)
+                .buyer(buyer)
                 .status(orders.getStatus())
                 .build();
     }

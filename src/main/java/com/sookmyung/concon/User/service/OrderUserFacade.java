@@ -70,7 +70,8 @@ public class OrderUserFacade {
                                 .stream().map(orderFacade::toSimpleDto).toList();
 
         String photoUrl = photoManager.getPhoto("user/" + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
-        return UserDetailResponseDto.toDto(user, top2OrderByUser, photoUrl);
+        String QRPhotoUrl = photoManager.getPhoto("user/" + user.getId() + "/QR", user.getQRImageName(), user.getQRImageCreateDate());
+        return UserDetailResponseDto.toDto(user, top2OrderByUser, photoUrl, QRPhotoUrl);
     }
 
     @Transactional(readOnly = true)

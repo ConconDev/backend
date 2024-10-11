@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Getter
 public class OrderCreateRequestDto {
     private Long couponId;
-    private Long sellerId;
 
     public Orders toEntity(Coupon coupon, User seller) {
         return Orders.builder()

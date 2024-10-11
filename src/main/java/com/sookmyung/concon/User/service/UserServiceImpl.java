@@ -1,8 +1,6 @@
 package com.sookmyung.concon.User.service;
 
 import com.sookmyung.concon.Item.service.ItemService;
-import com.sookmyung.concon.Kakao.dto.KakaoTokenResponse;
-import com.sookmyung.concon.Kakao.dto.KakaoUnlinkResponse;
 import com.sookmyung.concon.Kakao.service.KakaoService;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoManager;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -43,15 +40,23 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDetailConfigResponseDto getUserInfo(String token) {
         User user = orderUserFacade.findUserByToken(token);
-        return UserDetailConfigResponseDto.toDto(user, getUserPhoto(user));
+        return UserDetailConfigResponseDto.toDto(user, getUserPhoto(user), getUserQRPhoto(user));
     }
 
     private String getUserPhoto(User user) {
         return photoFacade.getUserPhotoUrl(user);
     }
 
+    private String getUserQRPhoto(User user) {
+        return photoFacade.getUserQRPhotoUrl(user);
+    }
+
     private String makePrefix(User user) {
         return PREFIX + user.getId();
+    }
+
+    private String makeQRPrefix(User user) {
+        return PREFIX + user.getId() + "/QR";
     }
 
     // id로 회원 정보 조회
@@ -90,17 +95,51 @@ public class UserServiceImpl implements UserService {
         User user = orderUserFacade.findUserByToken(token);
         user.update(request);
         String photoModifyUrl = "";
+        String qrPhotoModifyUrl = "";
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         if (request.getFileName() != null && !request.getFileName().isEmpty()) {
             String fileName = request.getFileName();
-            // TODO : modify
-            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
             photoModifyUrl = photoManager.updatePhoto(makePrefix(user),
                             user.getProfilePhotoName(), user.getProfileCreatedDate(),
                             fileName, now);
+
             user.updatePhoto(fileName, now);
         }
+
+        if (request.getQRFileName() != null && !request.getQRFileName().isEmpty()) {
+            String QRFileName = request.getQRFileName();
+
+            qrPhotoModifyUrl = photoManager.updatePhoto(makeQRPrefix(user),
+                    user.getQRImageName(), user.getQRImageCreateDate(),
+                    QRFileName, now);
+
+            user.updateQRImage(QRFileName, now);
+        }
         // TODO : 사진 수정
-        return UserModifyResponseDto.toDto(UserDetailConfigResponseDto.toDto(user, "로직 추가 예정"), photoModifyUrl);
+        return UserModifyResponseDto.toDto(UserDetailConfigResponseDto.toDto(user, "로직 추가 예정", "추가 예정"), photoModifyUrl, qrPhotoModifyUrl);
+    }
+
+
+    // QR 이미지 수정
+    @Override
+    @Transactional
+    public UserQRImageModifyResponseDto modifyQRImage(String token, UserQRImageModifyRequestDto request) {
+        User user = orderUserFacade.findUserByToken(token);
+
+        String qrPhotoModifyUrl = "";
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        if (request.getQRFileName() != null && !request.getQRFileName().isEmpty()) {
+            String QRFileName = request.getQRFileName();
+
+            qrPhotoModifyUrl = photoManager.updatePhoto(makeQRPrefix(user),
+                    user.getQRImageName(), user.getQRImageCreateDate(),
+                    QRFileName, now);
+
+            user.updateQRImage(QRFileName, now);
+        }
+
+        return UserQRImageModifyResponseDto.toDto(UserIdResponseDto.toDto(user), qrPhotoModifyUrl);
     }
 
     // 거래용 랜덤 5명의 판매 정보 가져오기

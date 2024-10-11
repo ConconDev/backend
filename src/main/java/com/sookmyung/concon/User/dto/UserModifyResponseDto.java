@@ -8,11 +8,13 @@ import lombok.Getter;
 public class UserModifyResponseDto {
     UserDetailConfigResponseDto user;
     String photoModifyUrl;
+    String QRPhotoModifyURl;
 
-    public static UserModifyResponseDto toDto(UserDetailConfigResponseDto user, String photoModifyUrl) {
+    public static UserModifyResponseDto toDto(UserDetailConfigResponseDto user, String photoModifyUrl, String QRPhotoModifyURl) {
         return UserModifyResponseDto.builder()
                 .user(user)
                 .photoModifyUrl(photoModifyUrl)
+                .QRPhotoModifyURl(QRPhotoModifyURl)
                 .build();
     }
 }

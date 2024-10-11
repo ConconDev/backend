@@ -33,16 +33,23 @@ public class OrderFacade {
 
     public OrderDetailResponseDto toDetailDto(Orders orders) {
         CouponSimpleResponseDto couponDto = couponFacade.toSimpleDto(orders.getCoupon());
-        UserSimpleResponseDto buyerDto = userFacade.toSimpleDto(orders.getBuyer());
+        UserSimpleResponseDto buyerDto = null;
+        if (orders.getBuyer() != null) {
+            buyerDto = userFacade.toSimpleDto(orders.getBuyer());
+        }
         UserSimpleResponseDto sellerDto = userFacade.toSimpleDto(orders.getSeller());
 
-        return OrderDetailResponseDto.toDto(orders, couponDto, buyerDto, sellerDto);
+        return OrderDetailResponseDto.toDto(orders, couponDto, sellerDto, buyerDto);
     }
 
     public OrderSimpleResponseDto toSimpleDto(Orders orders) {
         CouponSimpleResponseDto couponDto = couponFacade.toSimpleDto(orders.getCoupon());
         UserIdResponseDto sellerDto = UserIdResponseDto.toDto(orders.getSeller());
+        UserIdResponseDto buyerDto = null;
+        if (orders.getBuyer() != null) {
+            buyerDto = UserIdResponseDto.toDto(orders.getBuyer());
+        }
 
-        return OrderSimpleResponseDto.toDto(orders, couponDto, sellerDto);
+        return OrderSimpleResponseDto.toDto(orders, couponDto, sellerDto, buyerDto);
     }
 }

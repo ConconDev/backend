@@ -17,14 +17,16 @@ public class UserDetailResponseDto {
     private Long userId;
     private String username;
     private String profileUrl;
+    private String QRImageUrl;
     private String color;
     private List<OrderSimpleResponseDto> orders;
 
-    public static UserDetailResponseDto toDto(User user, List<OrderSimpleResponseDto> orders, String profileUrl) {
+    public static UserDetailResponseDto toDto(User user, List<OrderSimpleResponseDto> orders, String profileUrl, String QRImageUrl) {
         return UserDetailResponseDto.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .profileUrl(profileUrl)
+                .QRImageUrl(QRImageUrl)
                 .color(user.getColor())
                 .orders(orders)
                 .build();
