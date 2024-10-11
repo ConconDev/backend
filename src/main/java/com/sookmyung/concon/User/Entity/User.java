@@ -33,6 +33,10 @@ public class User {
     private String profilePhotoName;
     private LocalDateTime profileCreatedDate;
 
+    // QR 코드 이미지
+    private String QRImageName;
+    private LocalDateTime QRImageCreateDate;
+
     private String color;
 
     // 알람 여부
@@ -79,5 +83,10 @@ public class User {
     public void updatePhoto(String fileName, LocalDateTime time) {
         this.profilePhotoName = fileName;
         this.profileCreatedDate = time;
+    }
+
+    public void updateQRImage(String QRFileName, LocalDateTime time) {
+        this.QRImageName = QRFileName;
+        this.QRImageCreateDate = time;
     }
 }

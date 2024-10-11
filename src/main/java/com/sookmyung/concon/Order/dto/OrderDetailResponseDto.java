@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class OrderDetailResponseDto {
-    private Long id;
+    private Long orderId;
     private CouponSimpleResponseDto coupon;
     private UserSimpleResponseDto buyer;
     private UserSimpleResponseDto seller;
@@ -21,9 +21,9 @@ public class OrderDetailResponseDto {
     private OrderStatus status;
 
 
-    public static OrderDetailResponseDto toDto(Orders order, CouponSimpleResponseDto coupon, UserSimpleResponseDto buyer, UserSimpleResponseDto seller) {
+    public static OrderDetailResponseDto toDto(Orders order, CouponSimpleResponseDto coupon, UserSimpleResponseDto seller, UserSimpleResponseDto buyer) {
         return OrderDetailResponseDto.builder()
-                .id(order.getId())
+                .orderId(order.getId())
                 .coupon(coupon)
                 .buyer(buyer)
                 .seller(seller)

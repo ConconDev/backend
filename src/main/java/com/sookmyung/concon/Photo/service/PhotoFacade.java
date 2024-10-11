@@ -44,6 +44,10 @@ public class PhotoFacade {
     public String getUserPhotoUrl(User user) {
         return photoManager.getPhoto(USER_PREFIX + user.getId(), user.getProfilePhotoName(), user.getProfileCreatedDate());
     }
+
+    public String getUserQRPhotoUrl(User user) {
+        return photoManager.getPhoto(USER_PREFIX + user.getId() + "/QR", user.getQRImageName(), user.getQRImageCreateDate());
+    }
     public String getItemPhotoUrl(Item item) {
 //        return photoService.getPhoto(ITEM_PREFIX + item.getId() + item.getImagePath());
         return item.getImageUrl();

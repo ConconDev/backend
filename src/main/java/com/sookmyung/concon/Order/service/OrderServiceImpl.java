@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService{
     public OrderDetailResponseDto createOrder(OrderCreateRequestDto request) {
         Coupon coupon = orderFacade.findCouponById(request.getCouponId());
         Item item = coupon.getItem();
-        User seller = orderUserFacade.findUserById(request.getSellerId());
+        User seller = coupon.getUser();
         Orders orders = request.toEntity(coupon, seller);
         orderRepository.save(orders);
         return OrderDetailResponseDto.toDto(orders,

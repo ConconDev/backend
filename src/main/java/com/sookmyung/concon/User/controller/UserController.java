@@ -75,4 +75,13 @@ public class UserController {
             @RequestBody UserModifyRequestDto request) {
         return ResponseEntity.ok(userService.modifyUser(token, request));
     }
+
+    // QR 이미지만 추가
+    @Operation(summary = "QR 이미지 수정")
+    @PutMapping("/qr")
+    public ResponseEntity<?> modifyQRImage(
+            @RequestHeader("Authorization") String token,
+            @RequestBody UserQRImageModifyRequestDto request) {
+        return ResponseEntity.ok(userService.modifyQRImage(token, request));
+    }
 }
