@@ -8,6 +8,7 @@ import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.*;
 import com.sookmyung.concon.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.List;
 // tODO : paging 처리
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     private static final String PREFIX = "user/";
     private final OrderUserFacade orderUserFacade;
@@ -107,17 +109,22 @@ public class UserServiceImpl implements UserService {
             user.updatePhoto(fileName, now);
         }
 
-        if (request.getQRFileName() != null && !request.getQRFileName().isEmpty()) {
-            String QRFileName = request.getQRFileName();
+        log.info("request.getQrFileName()" + request.getQrFileName());
+
+        if (request.getQrFileName() != null && !request.getQrFileName().isEmpty()) {
+            String QRFileName = request.getQrFileName();
 
             qrPhotoModifyUrl = photoManager.updatePhoto(makeQRPrefix(user),
                     user.getQRImageName(), user.getQRImageCreateDate(),
                     QRFileName, now);
+            log.info("qrPhotoModifyUrl" + qrPhotoModifyUrl);
 
             user.updateQRImage(QRFileName, now);
         }
         // TODO : 사진 수정
-        return UserModifyResponseDto.toDto(UserDetailConfigResponseDto.toDto(user, "로직 추가 예정", "추가 예정"), photoModifyUrl, qrPhotoModifyUrl);
+        return UserModifyResponseDto.toDto(UserDetailConfigResponseDto
+                .toDto(user, "로직 추가 예정", "추가 예정"),
+                photoModifyUrl, qrPhotoModifyUrl);
     }
 
 
@@ -129,12 +136,17 @@ public class UserServiceImpl implements UserService {
 
         String qrPhotoModifyUrl = "";
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        if (request.getQRFileName() != null && !request.getQRFileName().isEmpty()) {
-            String QRFileName = request.getQRFileName();
+
+        log.info("request.getQrFileName()" + request.getQrFileName());
+
+        if (request.getQrFileName() != null && !request.getQrFileName().isEmpty()) {
+            String QRFileName = request.getQrFileName();
 
             qrPhotoModifyUrl = photoManager.updatePhoto(makeQRPrefix(user),
                     user.getQRImageName(), user.getQRImageCreateDate(),
                     QRFileName, now);
+
+            log.info("qrPhotoModifyUrl" + qrPhotoModifyUrl);
 
             user.updateQRImage(QRFileName, now);
         }
