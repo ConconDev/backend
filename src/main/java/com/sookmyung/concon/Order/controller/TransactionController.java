@@ -4,6 +4,8 @@ import com.sookmyung.concon.Order.dto.OrderDetailResponseDto;
 import com.sookmyung.concon.Order.dto.OrderRequestResponseDto;
 import com.sookmyung.concon.Order.dto.TransactionAcceptRequestDto;
 import com.sookmyung.concon.Order.service.TransactionService;
+import com.sookmyung.concon.Response.BasicResponse;
+import com.sookmyung.concon.Response.DataResponse;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,10 +25,10 @@ public class TransactionController {
     // 거래 요청
     @Operation(summary = "거래 요청", description = "거래를 원하는 상품에게 거래 요청 -> 거래 요청 대기 목록으로 들어감")
     @PostMapping("/request/{order-id}")
-    public ResponseEntity<OrderRequestResponseDto> requestOrder(
+    public ResponseEntity<? extends BasicResponse> requestOrder(
             @PathVariable("order-id") Long orderId,
             @RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(transactionService.requestOrder(orderId, token));
+        return ResponseEntity.ok(new DataResponse<>(transactionService.requestOrder(orderId, token)));
     }
 
     // 거래 요청 전체 조회
