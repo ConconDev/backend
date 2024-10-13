@@ -9,7 +9,7 @@ import lombok.Getter;
 public class UserModifyRequestDto {
     private String username;
     private String fileName;
-    private String QRFileName;
+    private String qrFileName;
     private String color;
     private boolean gift_notify;
     private boolean expiry_notify;

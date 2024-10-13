@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class UserQRImageModifyRequestDto {
-    String QRFileName;
+    String qrFileName;
 }
