@@ -62,10 +62,14 @@ public class TransactionService {
     public OrderRequestResponseDto requestOrder(Long orderId, String token) {
         Orders orders = findOrdersById(orderId);
         User buyer = userFacade.findUserByToken(token);
-        if (orders.getStatus() == OrderStatus.IN_PROGRESS) {
+        if (orders.getStatus() != OrderStatus.AVAILABLE) {
             throw new OrderInProgressException("이 주문은 이미 거래 중입니다. ");
         }
+
+        orders.updateStatus(OrderStatus.WAITING);
+
         orderRequestRedisRepository.save(orders.getId(), buyer.getId());
+
 
         // 판매자에게 알람
         Long sellerId = orders.getSeller().getId();
@@ -145,8 +149,6 @@ public class TransactionService {
         order.setTransactionDate(LocalDate.now());
 
         User seller = order.getSeller();
-
-
 
         Coupon coupon = order.getCoupon();
         coupon.changeUser(order.getBuyer());
