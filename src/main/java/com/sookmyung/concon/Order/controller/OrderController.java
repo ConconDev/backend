@@ -76,6 +76,16 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrdersByItemId(itemId, page, size));
     }
 
+    // 아이템 키워드로 조회(판매중)
+    @Operation(summary = "아이템 키워드로 판매 중인 상품 조회")
+    @GetMapping("/item/search")
+    public ResponseEntity<List<OrderSimpleResponseDto>> getAllOrdersByItemKeyword(
+            @RequestParam("name") String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(orderService.getAllOrdersByItemKeyword(name, page, size));
+    }
+
 //    // 거래 수정
 //    @Operation(summary = "거래 수정")
 //    @PutMapping

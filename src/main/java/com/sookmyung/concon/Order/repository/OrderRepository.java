@@ -24,5 +24,13 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
                                         @Param("status") OrderStatus status,
                                         Pageable pageable);
 
+    @Query("SELECT o FROM Orders o " +
+            "JOIN o.coupon c " +
+            "WHERE c.item.name LIKE %:name% " +
+            "AND o.status = :status")
+    List<Orders> findAllByItemNameContainingAndStatus(String name,
+                                   @Param("status") OrderStatus status,
+                                   Pageable pageable);
+
     List<Orders> findTop2BySellerOrderByCreatedDateDesc(User seller);
 }
