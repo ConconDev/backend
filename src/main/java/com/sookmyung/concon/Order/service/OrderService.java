@@ -24,5 +24,7 @@ public interface OrderService {
 
     List<OrderSimpleResponseDto> getAllOrdersByItemId(Long itemId, int page, int size);
 
+    List<OrderSimpleResponseDto> getAllOrdersByItemKeyword(String itemKeyword, int page, int size);
+
     void deleteOrder(Long orderId);
 }

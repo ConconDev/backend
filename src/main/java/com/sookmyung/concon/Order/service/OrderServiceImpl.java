@@ -2,17 +2,15 @@ package com.sookmyung.concon.Order.service;
 
 import com.sookmyung.concon.Coupon.Entity.Coupon;
 import com.sookmyung.concon.Coupon.dto.CouponSimpleResponseDto;
-import com.sookmyung.concon.Coupon.repository.CouponRepository;
-import com.sookmyung.concon.Coupon.service.CouponFacade;
 import com.sookmyung.concon.Item.Entity.Item;
 import com.sookmyung.concon.Item.dto.ItemSimpleResponseDto;
 import com.sookmyung.concon.Item.repository.ItemRepository;
+import com.sookmyung.concon.Item.service.ItemFacade;
 import com.sookmyung.concon.Order.dto.*;
 import com.sookmyung.concon.Order.entity.OrderStatus;
 import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Order.repository.OrderRepository;
 import com.sookmyung.concon.Photo.service.PhotoFacade;
-import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.dto.UserSimpleResponseDto;
 import com.sookmyung.concon.User.service.OrderUserFacade;
@@ -22,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 // TODO : 사진
 @Service
@@ -30,8 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
-    private final CouponFacade couponFacade;
     private final ItemRepository itemRepository;
+    private final ItemFacade itemFacade;
     private final OrderUserFacade orderUserFacade;
 
     private final PhotoFacade photoFacade;
@@ -104,6 +104,16 @@ public class OrderServiceImpl implements OrderService{
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목을 조회할 수 없습니다."));
         Pageable pageable = PageRequest.of(page, size);
         List<Orders> orders = orderRepository.findAllByItemAndStatus(item, OrderStatus.AVAILABLE, pageable);
+        return orderUserFacade.toOrderSimpleDtoList(orders);
+    }
+
+    // 아이템 키워드로 조회
+    @Override
+    public List<OrderSimpleResponseDto> getAllOrdersByItemKeyword(String itemKeyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Orders> orders = orderRepository
+                .findAllByItemNameContainingAndStatus(itemKeyword, OrderStatus.AVAILABLE, pageable);
         return orderUserFacade.toOrderSimpleDtoList(orders);
     }
 
