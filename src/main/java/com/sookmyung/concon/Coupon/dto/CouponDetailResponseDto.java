@@ -26,7 +26,8 @@ public class CouponDetailResponseDto {
     private Double price;
     private LocalDate expirationDate;
     private LocalDate usedDate;
-    private Boolean buyFlag;
+    private boolean sellFlag;
+    private boolean buyFlag;
     private String memo;
     private List<ReviewSimpleResponseDto> reviews;
 
@@ -34,17 +35,23 @@ public class CouponDetailResponseDto {
     public static CouponDetailResponseDto toDto(Coupon coupon, UserSimpleResponseDto user,
                                                 ItemSimpleResponseDto item, String barcodeImageUrl,
                                                 String couponImageUrl, List<ReviewSimpleResponseDto> reviews) {
+        String barcode = "";
+        if (!coupon.isSellFlag()) {
+            barcode = coupon.getBarcode();
+        }
+
         return CouponDetailResponseDto.builder()
                 .couponId(coupon.getId())
                 .user(user)
                 .item(item)
-                .barcode(coupon.getBarcode())
+                .barcode(barcode)
                 .barcodeImageUrl(barcodeImageUrl)
                 .itemImageUrl(item.getImageUrl())
                 .couponImageUrl(couponImageUrl)
                 .price(coupon.getRemainingPrice())
                 .expirationDate(coupon.getExpirationDate())
                 .usedDate(coupon.getUsedDate())
+                .sellFlag(coupon.isSellFlag())
                 .buyFlag(coupon.isBuyFlag())
                 .memo(coupon.getMemo())
                 .reviews(reviews)

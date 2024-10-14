@@ -28,10 +28,15 @@ public class CouponFacade {
     private final ReviewRepository reviewRepository;
 
     public CouponDetailResponseDto toDetailDto(Coupon coupon, User user, Item item) {
-        String couponImageUrl = photoFacade.getCouponPhotoUrl(coupon);
-        String barcodeImageUrl = photoFacade.getCouponBarcodePhotoUrl(coupon);
+        String couponImageUrl = "";
+        String barcodeImageUrl = "";
+        if (!coupon.isSellFlag()) {
+            couponImageUrl = photoFacade.getCouponPhotoUrl(coupon);
+            barcodeImageUrl = photoFacade.getCouponBarcodePhotoUrl(coupon);
+        }
         UserSimpleResponseDto userDto = UserSimpleResponseDto.toDto(user, photoFacade.getUserPhotoUrl(user));
         ItemSimpleResponseDto itemDto = ItemSimpleResponseDto.toDto(item, photoFacade.getItemPhotoUrl(item));
+
         List<ReviewSimpleResponseDto> reviews = reviewRepository.findAllByItemId(item.getId(), PageRequest.of(0, 10))
                 .stream().map(ReviewSimpleResponseDto::toDto).toList();
 

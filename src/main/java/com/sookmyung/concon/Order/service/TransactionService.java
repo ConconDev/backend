@@ -153,6 +153,7 @@ public class TransactionService {
         Coupon coupon = order.getCoupon();
         coupon.changeUser(order.getBuyer());
         coupon.setBuyFlag(true);
+        coupon.updateSellFlag(false);
 
 //        orderRequestRedisRepository.delete(orderId);
 

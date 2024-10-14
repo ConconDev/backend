@@ -32,6 +32,7 @@ public class CouponCreateRequestDto {
                 .itemPrice(item.getPrice())
                 .remainingPrice(price)
                 .expirationDate(expirationDate)
+                .sellFlag(false)
                 .buyFlag(false)
                 .memo(memo)
                 .build();

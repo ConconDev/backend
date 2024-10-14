@@ -34,8 +34,6 @@ public class CouponService {
     private final ItemFacade itemFacade;
     private final OrderUserFacade orderUserFacade;
     private final CouponFacade couponFacade;
-    private final PhotoFacade photoFacade;
-    private final UserFacade userFacade;
     private final ReviewRepository reviewRepository;
 
 
@@ -61,6 +59,9 @@ public class CouponService {
                 .map(couponFacade::toSimpleDto)
                 .toList();
     }
+
+
+    // 쿠폰 ID 로 단일 조회
     @Transactional(readOnly = true)
     public CouponDetailResponseDto getCouponDetail(String token, Long couponId) {
         User user = orderUserFacade.findUserByToken(token);
@@ -95,6 +96,7 @@ public class CouponService {
         return couponFacade.toDetailDto(coupon, coupon.getUser(), coupon.getItem());
     }
 
+    // 남은 돈 업데이트
     @Transactional
     public CouponDetailResponseDto changeRemainPrice(CouponChangePriceRequestDto request) {
         Coupon coupon = couponFacade.findByCouponId(request.getCouponId());
