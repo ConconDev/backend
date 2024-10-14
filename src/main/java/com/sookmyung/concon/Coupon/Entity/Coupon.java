@@ -60,11 +60,17 @@ public class Coupon {
     @Setter
     private boolean buyFlag;   // 구매 여부
 
+    private boolean sellFlag;
+
     private String memo;
 
 
     public void changeUser(User user) {
         this.user = user;
+    }
+
+    public void updateSellFlag(boolean sellFlag) {
+        this.sellFlag = sellFlag;
     }
 
     public void update(String barcode, Double remainingPrice,

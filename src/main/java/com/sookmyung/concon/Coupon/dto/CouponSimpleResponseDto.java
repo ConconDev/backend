@@ -16,6 +16,7 @@ public class CouponSimpleResponseDto {
     private Double price;
     private boolean isUsed;
     private boolean isBuyFlag;
+    private boolean isSellFlag;
     private String memo;
 
     public static CouponSimpleResponseDto toDto(Coupon coupon, ItemSimpleResponseDto item, boolean isUsed) {
@@ -25,6 +26,7 @@ public class CouponSimpleResponseDto {
                 .expirationDate(coupon.getExpirationDate())
                 .price(coupon.getRemainingPrice())
                 .isUsed(isUsed)
+                .isSellFlag(coupon.isSellFlag())
                 .isBuyFlag(coupon.isBuyFlag())
                 .memo(coupon.getMemo())
                 .build();

@@ -10,6 +10,7 @@ import com.sookmyung.concon.Order.entity.Orders;
 import com.sookmyung.concon.Order.exception.OrderInProgressException;
 import com.sookmyung.concon.Order.repository.OrderRepository;
 import com.sookmyung.concon.Order.repository.OrderRequestRedisRepository;
+import com.sookmyung.concon.Photo.service.PhotoFacade;
 import com.sookmyung.concon.Photo.service.PhotoService;
 import com.sookmyung.concon.User.Entity.User;
 import com.sookmyung.concon.User.Jwt.JwtUtil;
@@ -43,6 +44,7 @@ public class TransactionService {
     private final UserFacade userFacade;
     private final CouponFacade couponFacade;
     private final OrderFacade orderFacade;
+    private final PhotoFacade photoFacade;
 
 
     // order 아이디로 거래 찾기
@@ -108,7 +110,7 @@ public class TransactionService {
 
     // 거래 요청 시 바로 거래 중으로 변경
     @Transactional
-    public OrderDetailResponseDto requestOrder(Long orderId, String token) {
+    public OrderRequestResponseDto requestOrder(Long orderId, String token) {
         Orders orders = findOrdersById(orderId);
         User buyer = userFacade.findUserByToken(token);
         if (orders.getStatus() != OrderStatus.AVAILABLE) {
@@ -122,12 +124,14 @@ public class TransactionService {
         Long sellerId = orders.getSeller().getId();
         OrderEventAlarmDto response = OrderEventAlarmDto.toDto(orders, buyer);
         eventPublisher.publishEvent(sellerId, ORDER_REQUESTED, response);
-        return toOrderDetailDto(orders);
+
+        String userQRPhotoUrl = photoFacade.getUserQRPhotoUrl(orders.getBuyer());
+        return OrderRequestResponseDto.toDto(orders, buyer, userQRPhotoUrl);
     }
 
     // 거래 중 취소
     @Transactional
-    public OrderDetailResponseDto cancelTransaction(Long orderId) {
+    public void cancelTransaction(Long orderId) {
         Orders order = findOrdersById(orderId);
         User buyer = order.getBuyer();
         order.setBuyer(null);
@@ -137,8 +141,6 @@ public class TransactionService {
         List<Long> userIds = List.of(order.getSeller().getId(), buyer.getId());
         OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, buyer);
         eventPublisher.publishEventToMultipleUsers(userIds, ORDER_CANCELED, response);
-
-        return toOrderDetailDto(order);
     }
 
     // 거래 완료
@@ -151,6 +153,7 @@ public class TransactionService {
         Coupon coupon = order.getCoupon();
         coupon.changeUser(order.getBuyer());
         coupon.setBuyFlag(true);
+        coupon.updateSellFlag(false);
 
 //        orderRequestRedisRepository.delete(orderId);
 

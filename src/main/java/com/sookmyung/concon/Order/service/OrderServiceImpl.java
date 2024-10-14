@@ -48,6 +48,9 @@ public class OrderServiceImpl implements OrderService{
         User seller = coupon.getUser();
         Orders orders = request.toEntity(coupon, seller);
         orderRepository.save(orders);
+
+        coupon.updateSellFlag(true);
+
         return OrderDetailResponseDto.toDto(orders,
                 CouponSimpleResponseDto.toDto(coupon,
                         ItemSimpleResponseDto.toDto(item, photoFacade.getItemPhotoUrl(item)),

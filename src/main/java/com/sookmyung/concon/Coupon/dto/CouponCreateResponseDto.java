@@ -16,6 +16,7 @@ public class CouponCreateResponseDto {
     private Double price;
     private String category;
     private boolean isUsed;
+    private boolean isSellFlag;
     private boolean isBuyFlag;
     private String barcodeImageUploadUrl;
     private String couponImageUploadUrl;
@@ -29,6 +30,7 @@ public class CouponCreateResponseDto {
                 .expirationDate(coupon.getExpirationDate())
                 .price(coupon.getRemainingPrice())
                 .isUsed(false)
+                .isSellFlag(coupon.isSellFlag())
                 .isBuyFlag(coupon.isBuyFlag())
                 .barcodeImageUploadUrl(barcodeImageUploadUrl)
                 .couponImageUploadUrl(couponImageUploadUrl)
