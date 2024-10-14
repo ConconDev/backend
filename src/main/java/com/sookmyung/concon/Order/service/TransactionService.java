@@ -57,53 +57,72 @@ public class TransactionService {
         return orderFacade.toDetailDto(order);
     }
 
-    // 거래 요청
+//    // 거래 요청 (Redis 사용)
+//    @Transactional
+//    public OrderRequestResponseDto requestOrder(Long orderId, String token) {
+//        Orders orders = findOrdersById(orderId);
+//        User buyer = userFacade.findUserByToken(token);
+//        if (orders.getStatus() != OrderStatus.AVAILABLE) {
+//            throw new OrderInProgressException("이 주문은 이미 거래 중입니다. ");
+//        }
+//
+//        orders.updateStatus(OrderStatus.WAITING);
+//
+//        orderRequestRedisRepository.save(orders.getId(), buyer.getId());
+//
+//
+//        // 판매자에게 알람
+//        Long sellerId = orders.getSeller().getId();
+//        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(orders, buyer);
+//        eventPublisher.publishEvent(sellerId, ORDER_REQUESTED, response);
+//        return OrderRequestResponseDto.toDto(orders, buyer);
+//    }
+//
+//    // 거래 요청 전체 조회
+//    @Transactional(readOnly = true)
+//    public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
+//        return orderRequestRedisRepository.findAllMembersById(orderId)
+//                .stream()
+//                .map(userFacade::findUserById)
+//                .map(userFacade::toSimpleDto)
+//                .toList();
+//    }
+//
+////     거래 수락(거래 중)
+//    @Transactional
+//    public OrderDetailResponseDto acceptTransaction(TransactionAcceptRequestDto request) {
+//        Orders order = findOrdersById(request.getOrderId());
+//        User buyer = userFacade.findUserById(request.getBuyerId());
+//
+//        order.setBuyer(buyer);
+//        order.updateStatus(OrderStatus.IN_PROGRESS);
+//
+//        orderRequestRedisRepository.deleteUser(request.getOrderId(), request.getBuyerId());
+//
+//        // 구매자에게 알람
+//        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, buyer);
+//        eventPublisher.publishEvent(buyer.getId(), ORDER_ACCEPTED, response);
+//
+//        return toOrderDetailDto(order);
+//    }
+
+    // 거래 요청 시 바로 거래 중으로 변경
     @Transactional
-    public OrderRequestResponseDto requestOrder(Long orderId, String token) {
+    public OrderDetailResponseDto requestOrder(Long orderId, String token) {
         Orders orders = findOrdersById(orderId);
         User buyer = userFacade.findUserByToken(token);
         if (orders.getStatus() != OrderStatus.AVAILABLE) {
             throw new OrderInProgressException("이 주문은 이미 거래 중입니다. ");
         }
 
-        orders.updateStatus(OrderStatus.WAITING);
-
-        orderRequestRedisRepository.save(orders.getId(), buyer.getId());
-
+        orders.setBuyer(buyer);
+        orders.updateStatus(OrderStatus.IN_PROGRESS);
 
         // 판매자에게 알람
         Long sellerId = orders.getSeller().getId();
         OrderEventAlarmDto response = OrderEventAlarmDto.toDto(orders, buyer);
         eventPublisher.publishEvent(sellerId, ORDER_REQUESTED, response);
-        return OrderRequestResponseDto.toDto(orders, buyer);
-    }
-
-    // 거래 요청 전체 조회
-    @Transactional(readOnly = true)
-    public List<UserSimpleResponseDto> getAllRequestOrder(Long orderId) {
-        return orderRequestRedisRepository.findAllMembersById(orderId)
-                .stream()
-                .map(userFacade::findUserById)
-                .map(userFacade::toSimpleDto)
-                .toList();
-    }
-
-    // 거래 수락(거래 중)
-    @Transactional
-    public OrderDetailResponseDto acceptTransaction(TransactionAcceptRequestDto request) {
-        Orders order = findOrdersById(request.getOrderId());
-        User buyer = userFacade.findUserById(request.getBuyerId());
-
-        order.setBuyer(buyer);
-        order.updateStatus(OrderStatus.IN_PROGRESS);
-
-        orderRequestRedisRepository.deleteUser(request.getOrderId(), request.getBuyerId());
-
-        // 구매자에게 알람
-        OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, buyer);
-        eventPublisher.publishEvent(buyer.getId(), ORDER_ACCEPTED, response);
-
-        return toOrderDetailDto(order);
+        return toOrderDetailDto(orders);
     }
 
     // 거래 중 취소
@@ -133,7 +152,7 @@ public class TransactionService {
         coupon.changeUser(order.getBuyer());
         coupon.setBuyFlag(true);
 
-        orderRequestRedisRepository.delete(orderId);
+//        orderRequestRedisRepository.delete(orderId);
 
         // 구매자에게 알람
         OrderEventAlarmDto response = OrderEventAlarmDto.toDto(order, order.getBuyer());
