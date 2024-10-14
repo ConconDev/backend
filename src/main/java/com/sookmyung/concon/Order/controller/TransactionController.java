@@ -52,7 +52,8 @@ public class TransactionController {
     @PostMapping("/cancel/{order-id}")
     public ResponseEntity<OrderDetailResponseDto> cancelTransaction(
             @PathVariable("order-id") Long orderId) {
-        return ResponseEntity.ok(transactionService.cancelTransaction(orderId));
+        transactionService.cancelTransaction(orderId);
+        return ResponseEntity.noContent().build();
     }
 
     // 거래 완료

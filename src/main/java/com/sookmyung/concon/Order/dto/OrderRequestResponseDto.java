@@ -8,15 +8,16 @@ import lombok.Getter;
 @Builder @Getter
 public class OrderRequestResponseDto {
     private Long orderId;
-    private String orderTitle;
     private Long requesterId;
     private String requesterName;
+    private String qrImage;
 
-    public static OrderRequestResponseDto toDto(Orders orders, User requester) {
+    public static OrderRequestResponseDto toDto(Orders orders, User requester, String qrImage) {
         return OrderRequestResponseDto.builder()
                 .orderId(orders.getId())
                 .requesterId(requester.getId())
                 .requesterName(requester.getUsername())
+                .qrImage(qrImage)
                 .build();
     }
 }
