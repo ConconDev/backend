@@ -78,12 +78,21 @@ public class OrderServiceImpl implements OrderService{
         return orderUserFacade.getOrdersByUserId(userId, page, size);
     }
 
-    // 나의 판매 상품 조회(진행중)
+    // 나의 판매 상품 조회(판매중)
     @Transactional(readOnly = true)
     public List<OrderSimpleResponseDto> getAllOrdersAvailable(String token, int page, int size) {
         User seller = orderUserFacade.findUserByToken(token);
         Pageable pageable = PageRequest.of(page, size);
         List<Orders> orders = orderRepository.findBySellerAndStatus(seller, OrderStatus.AVAILABLE, pageable);
+        return orderUserFacade.toOrderSimpleDtoList(orders);
+    }
+
+    // 나의 판매 상품 조회(거래 진행 중)
+    @Transactional(readOnly = true)
+    public List<OrderSimpleResponseDto> getAllOrdersInProgress(String token, int page, int size) {
+        User seller = orderUserFacade.findUserByToken(token);
+        Pageable pageable = PageRequest.of(page, size);
+        List<Orders> orders = orderRepository.findBySellerAndStatus(seller, OrderStatus.IN_PROGRESS, pageable);
         return orderUserFacade.toOrderSimpleDtoList(orders);
     }
 

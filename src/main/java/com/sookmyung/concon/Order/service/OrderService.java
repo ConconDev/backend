@@ -20,6 +20,8 @@ public interface OrderService {
 
     List<OrderSimpleResponseDto> getAllOrdersAvailable(String token, int page, int size);
 
+    List<OrderSimpleResponseDto> getAllOrdersInProgress(String token, int page, int size);
+
     List<OrderSimpleResponseDto> getAllOrdersComplete(String token, int page, int size);
 
     List<OrderSimpleResponseDto> getAllOrdersByItemId(Long itemId, int page, int size);

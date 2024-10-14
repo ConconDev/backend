@@ -46,7 +46,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrders(token, page, size));
     }
 
-    // 나의 판매 상품 조회(진행중)
+    // 나의 판매 상품 조회(판매중)
     @Operation(summary = "나의 판매중(진행중)인 상품 전체 조회")
     @GetMapping("/all/available")
     public ResponseEntity<List<OrderSimpleResponseDto>> getAllOrdersAvailable(
@@ -54,6 +54,16 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         return ResponseEntity.ok(orderService.getAllOrdersAvailable(token, page, size));
+    }
+
+    // 나의 판매 상품 조회(거래중)
+    @Operation(summary = "나의 거래중인 상품 전체 조회")
+    @GetMapping("/all/in-progress")
+    public ResponseEntity<List<OrderSimpleResponseDto>> getAllOrdersInProgress(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(orderService.getAllOrdersInProgress(token, page, size));
     }
 
     // 나의 판매 상품 조회(완료)
